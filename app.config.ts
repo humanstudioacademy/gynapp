@@ -10,6 +10,8 @@ const ENV = (process.env.EXPO_PUBLIC_APP_ENV ?? 'development') as
 // Trocar aqui antes do primeiro `eas submit` se for usar outro domínio.
 const BASE_ID = 'ai.thehuman.gymapp';
 
+const EAS_PROJECT_ID = 'a63012c7-6e29-44c8-9083-32c3eb8d0d3f';
+
 const variants = {
   development: { name: 'GymApp (Dev)', id: `${BASE_ID}.dev` },
   preview: { name: 'GymApp (Beta)', id: `${BASE_ID}.preview` },
@@ -68,12 +70,22 @@ const config: ExpoConfig = {
       { photosPermission: 'Permite escolher fotos de progresso da sua galeria.' },
     ],
   ],
+  // EAS Update: publica JS/assets sem passar pelas lojas. O canal vem do perfil
+  // de build no eas.json (preview/production), então a mesma versão nativa pode
+  // receber atualizações diferentes por canal.
+  updates: {
+    url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
+    fallbackToCacheTimeout: 0,
+  },
+  // `appVersion` amarra a atualização à versão nativa: um bundle novo nunca cai
+  // num binário incompatível.
+  runtimeVersion: { policy: 'appVersion' },
   experiments: { typedRoutes: true },
   extra: {
     appEnv: ENV,
     // Projeto no EAS. Com app.config.ts (config dinâmico) o `eas init` não
     // escreve sozinho — o id fica aqui à mão, que é o que ele faria.
-    eas: { projectId: 'a63012c7-6e29-44c8-9083-32c3eb8d0d3f' },
+    eas: { projectId: EAS_PROJECT_ID },
   },
 };
 

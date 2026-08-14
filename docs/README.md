@@ -4,7 +4,7 @@
 > Stack: **Expo (React Native + TypeScript)** + **Supabase (Postgres + Auth + Storage)**.
 > Escopo v1: **área do aluno**.
 
-**Status:** ✅ Fases 0 e 2 concluídas · 🟡 Fase 1 aguardando SMTP próprio e rate limits do Auth (ver [PROGRESS](./PROGRESS.md))
+**Status:** ✅ Fases 0, 2, 3 e 4 concluídas — o app já registra treino de verdade · 🟡 Fase 1 aguardando SMTP e rate limits (ver [PROGRESS](./PROGRESS.md))
 
 ---
 
@@ -90,7 +90,9 @@ acompanha sua evolução por gráficos, recordes pessoais e medidas corporais.
 | Fase 0 — Fundação | ✅ **Concluída** |
 | Fase 1 — Auth e perfil | 🟡 **Código pronto e verificado** — faltam SMTP e rate limits |
 | Fase 2 — Biblioteca de exercícios | ✅ **Concluída** |
-| Fases 3–9 | ⬜ Não iniciadas |
+| Fase 3 — Rotinas e fichas | ✅ **Concluída** |
+| Fase 4 — Player de treino ⭐ | ✅ **Concluída** |
+| Fases 5–9 | ⬜ Não iniciadas |
 
 ---
 

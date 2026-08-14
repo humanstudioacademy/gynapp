@@ -1,15 +1,17 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { Clock, Pencil, Play } from 'lucide-react-native';
+import { Clock, Pencil } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
 import { ExerciseThumb } from '@/components/exercise/ExerciseThumb';
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Header } from '@/components/ui/Header';
 import { Screen } from '@/components/ui/Screen';
+import { useToast } from '@/components/ui/Toast';
+import { authErrorMessage } from '@/features/auth/api';
 import { useDayDetail } from '@/features/plans/hooks';
+import { useActiveSession, useStartSession } from '@/features/session/hooks';
 import { useSettings } from '@/features/profile/hooks';
 import { prescriptionSummary, supersetLabel } from '@/features/plans/format';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -20,9 +22,30 @@ export default function DayDetailScreen() {
   const day = useDayDetail(id);
   const { data: settings } = useSettings();
   const { colors } = useTheme();
+  const toast = useToast();
+
+  const activeSession = useActiveSession();
+  const startSession = useStartSession();
 
   const unitSystem = settings?.unit_system ?? 'metric';
   const data = day.data;
+
+  /**
+   * Só existe uma sessão em andamento por vez: se já houver, o player abre nela
+   * em vez de criar uma segunda e deixar o treino anterior órfão.
+   */
+  function onStart() {
+    if (activeSession.data) {
+      toast.show('Você já tem um treino em andamento.', 'info');
+      router.push('/session/active');
+      return;
+    }
+
+    startSession.mutate(id ?? '', {
+      onSuccess: () => router.push('/session/active'),
+      onError: (error) => toast.show(authErrorMessage(error), 'error'),
+    });
+  }
 
   if (day.isPending) {
     return (
@@ -163,19 +186,15 @@ export default function DayDetailScreen() {
           </View>
         )}
 
-        <Card className="gap-2">
-          <View className="flex-row items-center gap-2">
-            <Play size={18} color={colors.textSecondary} />
-            <Text className="text-base font-semibold text-neutral-900 dark:text-neutral-50">
-              Iniciar treino
-            </Text>
-          </View>
-          <Text className="text-[13px] leading-5 text-neutral-500 dark:text-neutral-400">
-            O player de treino é a Fase 4. Quando ele existir, este botão abre a sessão já com as
-            séries pré-preenchidas a partir das metas desta ficha.
-          </Text>
-          <Button title="Iniciar treino" size="lg" fullWidth disabled onPress={() => undefined} />
-        </Card>
+        <Button
+          title="Iniciar treino"
+          size="lg"
+          fullWidth
+          disabled={data.exercises.length === 0}
+          loading={startSession.isPending}
+          onPress={onStart}
+          testID="start-session"
+        />
       </View>
     </Screen>
   );

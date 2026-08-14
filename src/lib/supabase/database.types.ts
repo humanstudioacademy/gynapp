@@ -1005,6 +1005,7 @@ export type Database = {
           started_at: string
           status: Database["public"]["Enums"]["session_status"]
           total_reps: number
+          paused_seconds: number
           total_sets: number
           total_volume_kg: number
           updated_at: string
@@ -1025,6 +1026,7 @@ export type Database = {
           started_at?: string
           status?: Database["public"]["Enums"]["session_status"]
           total_reps?: number
+          paused_seconds?: number
           total_sets?: number
           total_volume_kg?: number
           updated_at?: string
@@ -1045,6 +1047,7 @@ export type Database = {
           started_at?: string
           status?: Database["public"]["Enums"]["session_status"]
           total_reps?: number
+          paused_seconds?: number
           total_sets?: number
           total_volume_kg?: number
           updated_at?: string

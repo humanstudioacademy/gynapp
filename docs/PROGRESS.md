@@ -5,7 +5,7 @@
 > Rastreador vivo do projeto. Atualizar ao fim de cada fase — o que entregou, o que ficou
 > pendente e o que mudou de rumo. O plano em si fica nos documentos numerados; **aqui fica a realidade.**
 
-**Última atualização:** 14/08/2026 · **Fase atual:** ✅ Fase 3 concluída · 🟡 Fase 1 aguardando SMTP e rate limits
+**Última atualização:** 14/08/2026 · **Fase atual:** ✅ Fase 4 concluída — o app já registra treino de verdade · 🟡 Fase 1 aguardando SMTP e rate limits
 
 ---
 
@@ -17,8 +17,8 @@ Fase 0        ██████████████████████
 Fase 1        ██████████████████████████░░░░   85%  🟡 Falta SMTP + rate limits
 Fase 2        ██████████████████████████████  100%  ✅ Concluída
 Fase 3        ██████████████████████████████  100%  ✅ Concluída
-Fase 4 ⭐     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%  ⏳ Próxima
-Fase 5        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
+Fase 4 ⭐     ██████████████████████████████  100%  ✅ Concluída
+Fase 5        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%  ⏳ Próxima
 Fase 6        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
 Fase 7        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
 Fase 8        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
@@ -33,8 +33,8 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 | 1 — Auth e perfil | 🟡 **Código pronto** | 14/08/26 | — | Faltam SMTP próprio e rate limits (dependem de conta externa) |
 | 2 — Exercícios | ✅ **Concluída** | 14/08/26 | 14/08/26 | Biblioteca, busca, filtros, detalhe, personalizados e seletor |
 | 3 — Rotinas | ✅ **Concluída** | 14/08/26 | 14/08/26 | Rotinas, fichas, editor de prescrição, bi-set e galeria de templates |
-| 4 — Player ⭐ | ⏳ Próxima | — | — | **Fase crítica — não reduzir prazo**. Emulador Android já disponível |
-| 5 — Progresso | ⬜ | — | — | |
+| 4 — Player ⭐ | ✅ **Concluída** | 14/08/26 | 14/08/26 | Treino registrado de ponta a ponta, com PRs disparando |
+| 5 — Progresso | ⏳ Próxima | — | — | Sessões já existem: dashboard e gráficos podem ler dados reais |
 | 6 — Corpo e metas | ⬜ | — | — | Abrir contas Apple/Google nesta fase |
 | 7 — Polimento | ⬜ | — | — | Iniciar teste fechado do Play aqui |
 | 8 — Beta | ⬜ | — | — | |
@@ -67,7 +67,7 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 
 | Artefato | Status | Onde |
 |---|---|---|
-| 15 migrations (schema, triggers, RPCs, RLS, storage, busca) | ✅ **Aplicadas em produção** | `supabase/migrations/` |
+| 16 migrations (schema, triggers, RPCs, RLS, storage, busca, pausa) | ✅ **Aplicadas em produção** | `supabase/migrations/` |
 | Seed de grupos musculares e equipamentos | ✅ **Arquivo pronto** | `supabase/seed/01_catalog.sql` |
 | Seed de 138 exercícios + músculos secundários | ✅ **Arquivo pronto** | `supabase/seed/02_exercises.sql` |
 | Seed de 5 templates de treino | ✅ **Arquivo pronto** | `supabase/seed/03_templates.sql` |
@@ -332,6 +332,68 @@ Detalhe que custou tempo: o `avdmanager` do Homebrew procura as system images no
 **iOS continua sem simulador** — depende do Xcode, que exige download pela App Store e um
 `sudo xcode-select` que só o Leonardo pode rodar.
 
+---
+
+## Fase 4 — resultado ⭐
+
+Concluída em 14/08/2026. **O marco crítico do projeto**: a partir daqui o app é usável de
+verdade — dá para treinar com ele.
+
+### Entregáveis
+
+| Item | Status |
+|---|---|
+| `start_workout_session()` integrada, séries pré-preenchidas | ✅ 23 séries criadas a partir das metas da ficha |
+| Tela do player conforme o wireframe do doc 05 | ✅ |
+| `SetRow` com edição inline de kg e reps | ✅ campos adaptados ao `tracking_type` |
+| Marcar série em 1 toque, com haptic e atualização otimista | ✅ |
+| Última performance por exercício | ✅ via `v_exercise_last_performance` |
+| Timer de descanso: auto-início, ±15s, pular, segundo plano | ✅ |
+| Notificação local + som + vibração ao fim do descanso | ✅ agendada no SO |
+| Cronômetro geral com pausa | ✅ e a pausa **não** conta na duração |
+| Adicionar/remover série e exercício durante o treino | ✅ |
+| Estado da sessão sobrevive a fechar o app | ✅ pelo banco (as séries são linhas) |
+| Retomar sessão ativa ao reabrir | ✅ card "Continuar treino" no dashboard |
+| Cancelar e finalizar com confirmação | ✅ 3 opções: continuar depois, descartar, cancelar |
+| `finish_workout_session()` integrada | ✅ |
+| Resumo pós-treino com PRs | ✅ |
+| `expo-keep-awake` durante o treino | ✅ respeitando `keep_screen_on` |
+
+### Validação executada
+
+| Verificação | Resultado |
+|---|---|
+| Sessão nasce com as séries pré-preenchidas pelas metas | ✅ 23 séries |
+| Volume ignora aquecimento (RN-01) | ✅ 2.900 kg — a série `warmup` não somou |
+| Contagem de séries ignora aquecimento | ✅ 4 de 5 marcadas |
+| Triggers de PR: `max_weight`, `max_volume_set`, `estimated_1rm` | ✅ 80 kg, 800 kg, 106,67 (Epley confere) |
+| `previous_value` do recorde | ✅ 70 → 80 kg |
+| `finish` remove séries incompletas | ✅ 23 → 5 |
+| Duração desconta o tempo pausado | ✅ 20s de treino − 8s de pausa = 12s gravados |
+| Timer de descanso inicia sozinho no valor da ficha | ✅ 2:00 na Barra Fixa |
+| Resumo mostra os 3 recordes com o ganho | ✅ 90 kg ▲ +10, 900 kg ▲ +100, 1RM 120 ▲ +13,3 |
+| `npm run typecheck` e `npm run lint` | ✅ limpos |
+
+### Bugs encontrados e corrigidos na verificação
+
+| Bug | Correção |
+|---|---|
+| `useKeepAwake()` derrubava o player com "The wake lock has not activated yet" — o desativar corria antes do ativar resolver | `useKeepScreenOn` próprio, com as duas pontas tratadas e respeitando `user_settings.keep_screen_on` |
+| **O checkbox saía da tela**: com `flex-1` nos campos, a coluna de concluir ficava cortada — e marcar série é a interação central do app | Larguras fixas no `SetRow`; remover série virou toque longo em vez de um X permanente roubando espaço |
+| O player continuava montado e seu efeito de "sessão sumiu" disparava `router.replace('/')` **por cima da tela de resumo** | Removido o redirecionamento automático: sem sessão, o player mostra estado vazio |
+| `finish_workout_session` calculava duração por relógio de parede — 20 min de pausa entravam no treino | Migration `20260814001600`: coluna `paused_seconds` e o finish subtraindo |
+
+### Ambiente
+
+Os dois simuladores rodando o app: **iPhone 17 Pro** (iOS 26.5, Xcode 26.6) e **Pixel 8**
+(API 36). O `scripts/db.sh` deixou de depender do Docker — passa a usar `psql` nativo
+(`brew install libpq`) e cai para o Docker só se não achar. O Docker Desktop caiu duas vezes
+no meio da sessão e travou o fluxo; agora não trava mais.
+
+O gerador de tipos do Supabase CLI ainda exige Docker. O `db.sh types` foi corrigido para
+escrever num temporário: numa das falhas ele sobrescreveu o `database.types.ts` com o JSON
+do erro e destruiu o arquivo.
+
 ## Registro de decisões tomadas durante a execução
 
 > Registrar aqui toda decisão que desviar do plano, com o motivo. Se for arquitetural, criar também
@@ -363,6 +425,10 @@ Detalhe que custou tempo: o `avdmanager` do Homebrew procura as system images no
 | 14/08/26 | 3 | Duplicar rotina reusa `copy_plan_template` | A RPC já copia fichas e prescrições e grava `owner_id = auth.uid()`; escrever um segundo caminho de cópia seria duplicar regra |
 | 14/08/26 | 3 | Botão "Iniciar treino" visível porém desabilitado na ficha | Deixa claro para onde a ficha leva sem fingir que a Fase 4 existe |
 | 14/08/26 | 3 | `cmdline-tools` instalado dentro do `ANDROID_HOME` | O `avdmanager` do brew procura as system images no diretório dele e não enxergava o SDK do usuário |
+| 14/08/26 | 4 | Coluna `paused_seconds` + finish descontando | Sem ela a pausa entrava na duração do treino e contaminava histórico e médias |
+| 14/08/26 | 4 | Estado da sessão persiste no banco, não em MMKV | As séries já são linhas: fechar e reabrir o app retoma sozinho. MMKV entra na Fase 7, junto do outbox offline, que é onde ele realmente é necessário |
+| 14/08/26 | 4 | Remover série é toque longo, não botão visível | O X permanente empurrava o checkbox para fora da tela em aparelho estreito |
+| 14/08/26 | 4 | `scripts/db.sh` usa `psql` nativo e só cai para o Docker | Docker Desktop caiu duas vezes na sessão e bloqueou migration e geração de tipos |
 
 ---
 

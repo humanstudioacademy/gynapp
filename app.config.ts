@@ -10,7 +10,9 @@ const ENV = (process.env.EXPO_PUBLIC_APP_ENV ?? 'development') as
 // Trocar aqui antes do primeiro `eas submit` se for usar outro domínio.
 const BASE_ID = 'ai.thehuman.gymapp';
 
-const EAS_PROJECT_ID = 'a63012c7-6e29-44c8-9083-32c3eb8d0d3f';
+// Projeto @human-technology/gymapp no EAS. Precisa casar com o `slug` abaixo:
+// o EAS recusa publicar se os dois divergirem.
+const EAS_PROJECT_ID = '35554412-ef06-4193-8cb2-d3531fdab043';
 
 const variants = {
   development: { name: 'GymApp (Dev)', id: `${BASE_ID}.dev` },

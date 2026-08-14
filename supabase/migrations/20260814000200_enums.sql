@@ -1,0 +1,19 @@
+-- Tipos enumerados do domínio
+create type gender_type       as enum ('male','female','other','undisclosed');
+create type experience_level  as enum ('beginner','intermediate','advanced');
+create type fitness_goal      as enum ('lose_fat','gain_muscle','gain_strength','endurance','health','maintenance');
+create type unit_system       as enum ('metric','imperial');
+create type theme_preference  as enum ('light','dark','system');
+create type body_part         as enum ('upper','lower','core','full_body');
+create type muscle_role       as enum ('primary','secondary');
+create type exercise_mechanic as enum ('compound','isolation');
+create type force_type        as enum ('push','pull','static');
+create type tracking_type     as enum ('weight_reps','reps_only','duration','distance_duration','weight_duration');
+create type plan_source       as enum ('system','user','coach');
+create type session_status    as enum ('in_progress','paused','completed','cancelled');
+create type set_type          as enum ('warmup','normal','drop','failure','backoff','amrap');
+create type record_type       as enum ('max_weight','max_reps','max_volume_set','max_volume_session','estimated_1rm','best_duration','best_distance');
+create type goal_type         as enum ('weekly_sessions','body_weight','exercise_1rm','total_volume','body_measurement');
+create type goal_status       as enum ('active','achieved','expired','cancelled');
+create type photo_pose        as enum ('front','side','back','other');
+create type device_platform   as enum ('ios','android');

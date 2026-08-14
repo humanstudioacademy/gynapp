@@ -1,0 +1,47 @@
+# Dependências
+node_modules/
+.pnp
+.pnp.js
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Nativo
+/ios
+/android
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Segredos — NUNCA versionar
+.env
+.env.local
+.env.*.local
+credentials/
+*.pem
+
+# Metro / cache
+.metro-health-check*
+.cache/
+*.tsbuildinfo
+
+# Sistema
+.DS_Store
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Testes
+coverage/
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json

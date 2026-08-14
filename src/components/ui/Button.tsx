@@ -17,7 +17,7 @@ type Props = {
 };
 
 const variantClass: Record<Variant, string> = {
-  primary: 'bg-brand-500',
+  primary: 'bg-brand-400',
   secondary: 'bg-neutral-200 dark:bg-neutral-800',
   ghost: 'bg-transparent',
   danger: 'bg-danger',
@@ -26,7 +26,7 @@ const variantClass: Record<Variant, string> = {
 const textClass: Record<Variant, string> = {
   primary: 'text-neutral-950',
   secondary: 'text-neutral-900 dark:text-neutral-50',
-  ghost: 'text-brand-600 dark:text-brand-500',
+  ghost: 'text-brand-800 dark:text-brand-400',
   danger: 'text-white',
 };
 

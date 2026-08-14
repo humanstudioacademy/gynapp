@@ -23,7 +23,7 @@ export function OptionCard({ title, description, selected, onPress }: Props) {
       accessibilityState={{ selected }}
       className={`min-h-[56px] flex-row items-center gap-3 rounded-lg border p-4 ${
         selected
-          ? 'border-brand-500 bg-brand-50 dark:bg-neutral-900'
+          ? 'border-brand-400 bg-brand-50 dark:bg-neutral-900'
           : 'border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900'
       }`}
     >

@@ -28,7 +28,7 @@ export const Input = forwardRef<TextInput, Props>(function Input(
   const borderClass = error
     ? 'border-danger'
     : focused
-      ? 'border-brand-500'
+      ? 'border-brand-400'
       : 'border-neutral-200 dark:border-neutral-800';
 
   return (

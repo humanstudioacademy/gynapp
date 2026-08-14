@@ -28,6 +28,7 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 | Fase | Status | Início | Fim | Observações |
 |---|---|---|---|---|
 | Planejamento | ✅ Concluída | 13/08/26 | 14/08/26 | 13 documentos + seeds do banco |
+| Design system v2 | ✅ **Concluída** | 14/08/26 | 14/08/26 | Linguagem lima; tokens aplicados no código; docs 05/06/07/12 revisados |
 | 0 — Fundação | ✅ **Concluída** | 14/08/26 | 14/08/26 | Expo SDK 57 + banco aplicado e validado |
 | 1 — Auth e perfil | 🟡 **Código pronto** | 14/08/26 | — | Faltam SMTP próprio e rate limits (dependem de conta externa) |
 | 2 — Exercícios | ✅ **Concluída** | 14/08/26 | 14/08/26 | Biblioteca, busca, filtros, detalhe, personalizados e seletor |
@@ -43,7 +44,7 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 
 ## Artefatos já entregues
 
-### Documentação (13 arquivos em `docs/`)
+### Documentação (14 arquivos em `docs/`)
 
 | Documento | Status |
 |---|---|
@@ -59,6 +60,7 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 | [08 — Roadmap](./08-roadmap-e-fases.md) | ✅ |
 | [09 — Publicação](./09-publicacao-nas-lojas.md) | ✅ |
 | [10 — Qualidade e CI/CD](./10-qualidade-testes-e-cicd.md) | ✅ |
+| [12 — Referências Visuais](./12-referencias-visuais.md) | ✅ **novo** — origem da linguagem v2 |
 | [11 — Decisões](./11-decisoes-e-pendencias.md) | ✅ |
 
 ### Banco de dados (`supabase/`)

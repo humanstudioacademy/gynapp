@@ -160,14 +160,21 @@ Se não estiver resolvida, **desacoplar**: lançar com placeholder e adicionar a
 - [ ] Agrupamento em bi-set / tri-set
 - [ ] Galeria de templates com pré-visualização e `copy_plan_template()`
 - [ ] Definir rotina ativa
-- [ ] Estimativa automática de duração da ficha
+- [ ] Estimativa automática de duração da ficha — fórmula em **RN-14** (US-12.4)
 - [x] ~~Seed dos 5 templates do sistema~~ — **já pronto** em `supabase/seed/03_templates.sql`
+
+**Interface v2** ([doc 07](./07-design-system-e-ux.md) · [doc 12](./12-referencias-visuais.md)):
+- [ ] `TabBarFab` — tab bar com `+` central e sheet de ação rápida (US-12.7)
+- [ ] `HeroCard` + `MetaChip` nos cards de ficha, rotina e template (US-12.5)
+- [ ] `PillTabs` e `FilterBar` na galeria de templates
+- [x] ~~Tokens v2 (paleta lima, raios, tipografia)~~ — **já aplicado** em `src/theme/tokens.ts`
 
 ### Critérios de saída
 ✅ Criar uma rotina ABC completa em menos de 5 minutos
 ✅ Reordenar exercícios persiste corretamente
 ✅ Copiar template gera cópia independente e editável
 ✅ Excluir rotina não apaga histórico de sessões
+✅ Nenhum preenchimento lima com texto branco (checklist da [doc 12, §5](./12-referencias-visuais.md))
 
 ---
 
@@ -198,12 +205,21 @@ Se não estiver resolvida, **desacoplar**: lançar com placeholder e adicionar a
 - [ ] Tela de resumo pós-treino com PRs e animação de celebração
 - [ ] `expo-keep-awake` durante o treino
 
+**Interface v2** — o player é onde a linguagem visual mais aparece:
+- [ ] `RingStat` de progresso da ficha no header (US-12.2)
+- [ ] `GetReadyOverlay` 3-2-1 antes da primeira série
+- [ ] `CelebrationSheet` unificado para PR, treino concluído e meta batida (US-12.8)
+- [ ] `BentoGrid` de métricas no resumo pós-treino
+- [ ] **Modo foco** com `RepCounter` (US-12.6) — 🟢, primeiro item a cair se a fase apertar
+
 ### Critérios de saída
 ✅ Um treino completo de 6 exercícios × 4 séries é registrado sem travamento
 ✅ Marcar série responde em < 100ms
 ✅ Timer dispara notificação com o app fechado
 ✅ Matar o app no meio do treino e reabrir retoma tudo
 ✅ PRs aparecem corretamente no resumo
+✅ Trocar entre modo lista e foco preserva série, cronômetro e timer
+✅ Player legível nos dois temas e com "reduzir movimento" ativo
 ✅ **Teste real:** desenvolvedor treina com o app por 1 semana inteira
 
 ---
@@ -226,10 +242,18 @@ Se não estiver resolvida, **desacoplar**: lançar com placeholder e adicionar a
 - [ ] Cálculo e exibição de streak
 - [ ] Estados vazios de todos os gráficos
 
+**Interface v2** — o dashboard é a vitrine da linguagem:
+- [ ] `RingStat` de meta semanal no topo do dashboard (US-12.1)
+- [ ] `StreakStrip` de 7 dias (US-12.3)
+- [ ] `BentoGrid` de métricas da semana
+- [ ] `GaugeArc` de volume vs. período anterior no hub de Progresso
+- [ ] Séries dos gráficos usando `dataSeries` dos tokens (contraste já validado)
+
 ### Critérios de saída
 ✅ Gráficos renderizam em < 500ms com 6 meses de dados
 ✅ Dashboard carrega em 1 chamada só ao banco
 ✅ Estados vazios aparecem quando não há dado suficiente
+✅ Anéis anunciam valor ao leitor de tela e respeitam "reduzir movimento"
 
 ---
 

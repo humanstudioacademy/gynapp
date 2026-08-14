@@ -179,6 +179,11 @@ antes de gerar.
 
 **Preencher sempre — a falta de conta de teste é uma das causas mais rápidas de rejeição.**
 
+> ✅ **A conta já existe** no projeto Supabase (criada em 14/08/2026, e-mail confirmado, login
+> validado pela API de auth). Falta apenas popular o histórico — fazer depois da Fase 4, quando
+> o player permitir registrar treinos de verdade. **Não submeter antes disso:** revisor que entra
+> numa conta vazia não consegue testar o fluxo principal descrito abaixo.
+
 ```
 CONTA DE TESTE
 E-mail: revisor@gymapp.com.br

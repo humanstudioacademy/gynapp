@@ -196,7 +196,7 @@ function ProfileForm({ profile, unitSystem }: { profile: Profile; unitSystem: Un
           className="active:opacity-80"
         >
           <Avatar uri={avatarUrl(profile.avatar_path)} name={profile.full_name} size="lg" />
-          <View className="absolute bottom-0 right-0 h-8 w-8 items-center justify-center rounded-full border-2 border-neutral-50 bg-brand-500 dark:border-neutral-950">
+          <View className="absolute bottom-0 right-0 h-8 w-8 items-center justify-center rounded-full border-2 border-neutral-50 bg-brand-400 dark:border-neutral-950">
             {uploadAvatar.isPending ? (
               <ActivityIndicator size="small" color={colors.textInverse} />
             ) : (

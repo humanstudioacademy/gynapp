@@ -86,7 +86,7 @@ export default function SignInScreen() {
             accessibilityLabel="Esqueci minha senha"
             className="self-start"
           >
-            <Text className="text-[15px] font-medium text-brand-600 dark:text-brand-500">
+            <Text className="text-[15px] font-medium text-brand-800 dark:text-brand-400">
               Esqueci minha senha
             </Text>
           </Pressable>
@@ -114,7 +114,7 @@ export default function SignInScreen() {
             className="h-11 items-center justify-center"
           >
             <Text className="text-[15px] text-neutral-500 dark:text-neutral-400">
-              Não tem conta? <Text className="font-semibold text-brand-600 dark:text-brand-500">Criar agora</Text>
+              Não tem conta? <Text className="font-semibold text-brand-800 dark:text-brand-400">Criar agora</Text>
             </Text>
           </Pressable>
         </View>

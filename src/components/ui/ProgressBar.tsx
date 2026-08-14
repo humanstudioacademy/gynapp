@@ -16,7 +16,7 @@ export function ProgressBar({ value, label }: Props) {
       accessibilityValue={{ min: 0, max: 100, now: Math.round(clamped * 100) }}
       className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800"
     >
-      <View style={{ width: `${clamped * 100}%` }} className="h-full rounded-full bg-brand-500" />
+      <View style={{ width: `${clamped * 100}%` }} className="h-full rounded-full bg-brand-400" />
     </View>
   );
 }

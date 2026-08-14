@@ -9,7 +9,7 @@ import { palette } from '@/theme/tokens';
 export function BootSplash() {
   return (
     <View className="absolute inset-0 items-center justify-center gap-6 bg-neutral-950">
-      <Text className="text-4xl font-bold text-brand-500">GymApp</Text>
+      <Text className="text-4xl font-bold text-brand-400">GymApp</Text>
       <ActivityIndicator color={palette.neutral[500]} />
     </View>
   );

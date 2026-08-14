@@ -80,7 +80,7 @@ export function ExerciseListItem({
           <View
             className={`h-6 w-6 items-center justify-center rounded-sm border ${
               selected
-                ? 'border-brand-500 bg-brand-500'
+                ? 'border-brand-400 bg-brand-400'
                 : 'border-neutral-300 dark:border-neutral-700'
             }`}
           >

@@ -87,7 +87,7 @@ export default function OnboardingFrequencyScreen() {
                   accessibilityState={{ selected }}
                   className={`h-14 flex-1 items-center justify-center rounded-md border ${
                     selected
-                      ? 'border-brand-500 bg-brand-500'
+                      ? 'border-brand-400 bg-brand-400'
                       : 'border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900'
                   }`}
                 >
@@ -149,7 +149,7 @@ export default function OnboardingFrequencyScreen() {
                         accessibilityState={{ checked: selected }}
                         className={`h-11 flex-1 items-center justify-center rounded-sm border ${
                           selected
-                            ? 'border-brand-500 bg-brand-500'
+                            ? 'border-brand-400 bg-brand-400'
                             : 'border-neutral-200 dark:border-neutral-700'
                         }`}
                       >

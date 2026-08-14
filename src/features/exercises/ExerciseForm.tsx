@@ -219,7 +219,7 @@ export function ExerciseForm({
             key={step}
             className="flex-row items-center gap-3 rounded-md border border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900"
           >
-            <View className="h-6 w-6 items-center justify-center rounded-full bg-brand-500">
+            <View className="h-6 w-6 items-center justify-center rounded-full bg-brand-400">
               <Text className="text-[13px] font-bold text-neutral-950">{index + 1}</Text>
             </View>
             <Text className="flex-1 text-[15px] text-neutral-900 dark:text-neutral-50">{step}</Text>

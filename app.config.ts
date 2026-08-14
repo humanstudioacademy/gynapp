@@ -69,7 +69,12 @@ const config: ExpoConfig = {
     ],
   ],
   experiments: { typedRoutes: true },
-  extra: { appEnv: ENV },
+  extra: {
+    appEnv: ENV,
+    // Projeto no EAS. Com app.config.ts (config dinâmico) o `eas init` não
+    // escreve sozinho — o id fica aqui à mão, que é o que ele faria.
+    eas: { projectId: 'a63012c7-6e29-44c8-9083-32c3eb8d0d3f' },
+  },
 };
 
 export default config;

@@ -24,6 +24,7 @@
 | 09 | [Publicação nas Lojas](./09-publicacao-nas-lojas.md) | EAS Build/Submit, App Store, Google Play, assets, compliance |
 | 10 | [Qualidade, Testes e CI/CD](./10-qualidade-testes-e-cicd.md) | Estratégia de testes, lint, GitHub Actions, observabilidade |
 | 11 | [Decisões e Pendências](./11-decisoes-e-pendencias.md) | ADRs, decisões fechadas, riscos, o que ainda depende de você |
+| 12 | [Referências Visuais](./12-referencias-visuais.md) | Origem da linguagem v2, o que adaptamos, o que descartamos e por quê |
 | 📊 | [**PROGRESS**](./PROGRESS.md) | Rastreador vivo da execução — atualizar a cada fase |
 
 ## 🗄 Artefatos de banco já escritos
@@ -48,8 +49,8 @@ acompanha sua evolução por gráficos, recordes pessoais e medidas corporais.
 | Métrica | Valor |
 |---|---|
 | Tabelas no banco | **19** + 3 views + 8 funções (RPC) |
-| Telas | **42** (auth, tabs, modais e fluxos) |
-| Épicos funcionais | **11**, com 41 user stories |
+| Telas | **43** + 2 overlays (auth, tabs, modais e fluxos) |
+| Épicos funcionais | **12**, com 51 user stories |
 | Exercícios no catálogo | **138** (já escritos e versionados) |
 | Rotinas prontas | **5** templates do sistema |
 | Fases de desenvolvimento | **10** (Fase 0 → Fase 9) |
@@ -80,7 +81,9 @@ acompanha sua evolução por gráficos, recordes pessoais e medidas corporais.
 
 | Etapa | Status |
 |---|---|
-| Planejamento (13 documentos) | ✅ **Concluído** |
+| Planejamento (14 documentos) | ✅ **Concluído** |
+| Design system v2 — tokens aplicados no código | ✅ **Concluído** (doc [07](./07-design-system-e-ux.md) · [12](./12-referencias-visuais.md)) |
+| Conta de teste para revisão das lojas | ✅ **Criada** — `revisor@gymapp.com.br` ([doc 09](./09-publicacao-nas-lojas.md)) |
 | Seeds do banco (catálogo + templates) | ✅ **Escritos e versionados** |
 | Decisões de produto (D1–D8) e arquitetura (ADR-001 a 011) | ✅ **Fechadas** |
 | Nome do app e bundle ID | 🟡 `ai.thehuman.gymapp` provisório — alterável até a 1ª submissão |

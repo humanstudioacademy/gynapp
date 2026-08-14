@@ -114,7 +114,7 @@ function NotificationsForm({ settings }: { settings: UserSettings }) {
                       accessibilityState={{ checked: selected }}
                       className={`h-11 flex-1 items-center justify-center rounded-sm border ${
                         selected
-                          ? 'border-brand-500 bg-brand-500'
+                          ? 'border-brand-400 bg-brand-400'
                           : 'border-neutral-200 dark:border-neutral-700'
                       }`}
                     >

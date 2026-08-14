@@ -45,7 +45,7 @@ export default function WelcomeScreen() {
   return (
     <View className="flex-1 bg-neutral-50 dark:bg-neutral-950">
       <View style={{ paddingTop: insets.top + 24 }} className="items-center">
-        <Text className="text-3xl font-bold text-brand-600 dark:text-brand-500">GymApp</Text>
+        <Text className="text-3xl font-bold text-brand-800 dark:text-brand-400">GymApp</Text>
       </View>
 
       <ScrollView
@@ -78,7 +78,7 @@ export default function WelcomeScreen() {
           <View
             key={slide.title}
             className={`h-2 rounded-full ${
-              i === index ? 'w-6 bg-brand-500' : 'w-2 bg-neutral-300 dark:bg-neutral-700'
+              i === index ? 'w-6 bg-brand-400' : 'w-2 bg-neutral-300 dark:bg-neutral-700'
             }`}
           />
         ))}

@@ -153,7 +153,7 @@ export default function ExerciseDetailScreen() {
             <View className="gap-3">
               {exercise.instructions.map((step, index) => (
                 <View key={step} className="flex-row gap-3">
-                  <View className="h-6 w-6 items-center justify-center rounded-full bg-brand-500">
+                  <View className="h-6 w-6 items-center justify-center rounded-full bg-brand-400">
                     <Text className="text-[13px] font-bold text-neutral-950">{index + 1}</Text>
                   </View>
                   <Text className="flex-1 text-[15px] leading-6 text-neutral-600 dark:text-neutral-300">
@@ -170,7 +170,7 @@ export default function ExerciseDetailScreen() {
             <View className="gap-2">
               {exercise.tips.map((tip) => (
                 <View key={tip} className="flex-row gap-2">
-                  <Text className="text-[15px] text-brand-600 dark:text-brand-500">•</Text>
+                  <Text className="text-[15px] text-brand-800 dark:text-brand-400">•</Text>
                   <Text className="flex-1 text-[15px] leading-6 text-neutral-600 dark:text-neutral-300">
                     {tip}
                   </Text>

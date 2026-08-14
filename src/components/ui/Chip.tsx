@@ -19,7 +19,7 @@ export function Chip({ label, selected, onPress, tint }: Props) {
       style={selected && tint ? { backgroundColor: tint, borderColor: tint } : undefined}
       className={`h-11 justify-center rounded-full border px-4 ${
         selected
-          ? 'border-brand-500 bg-brand-500'
+          ? 'border-brand-400 bg-brand-400'
           : 'border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900'
       }`}
     >

@@ -147,7 +147,7 @@ export default function SignUpScreen() {
                   <View
                     className={`h-6 w-6 items-center justify-center rounded-sm border ${
                       field.value
-                        ? 'border-brand-500 bg-brand-500'
+                        ? 'border-brand-400 bg-brand-400'
                         : 'border-neutral-300 dark:border-neutral-700'
                     }`}
                   >
@@ -190,7 +190,7 @@ export default function SignUpScreen() {
           >
             <Text className="text-[15px] text-neutral-500 dark:text-neutral-400">
               Já tem conta?{' '}
-              <Text className="font-semibold text-brand-600 dark:text-brand-500">Entrar</Text>
+              <Text className="font-semibold text-brand-800 dark:text-brand-400">Entrar</Text>
             </Text>
           </Pressable>
         </View>

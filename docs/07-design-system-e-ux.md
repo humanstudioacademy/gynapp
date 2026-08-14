@@ -2,6 +2,11 @@
 
 [← Voltar ao índice](./README.md)
 
+> **v2 — "Lima sobre tinta".** Esta versão substitui o verde esmeralda por uma linguagem
+> de lima ácido sobre preto esverdeado, com superfícies arredondadas, anéis de progresso e
+> números heróicos. A origem visual está em [12 — Referências visuais](./12-referencias-visuais.md).
+> Os contrastes citados aqui foram **medidos** (WCAG 2.1), não estimados.
+
 ---
 
 ## 1. Princípios de design
@@ -12,6 +17,8 @@
 | **Menos toques vence** | Registrar uma série = 1 toque. Iniciar um treino = 2 toques a partir da abertura do app |
 | **Mostre o contexto, não peça** | O app já sabe a última carga usada — mostra e pré-preenche, em vez de perguntar |
 | **Escuro por padrão** | Academia costuma ser ambiente escuro; tema escuro reduz ofuscamento e economiza bateria em OLED |
+| **O número é o herói** 🆕 | Carga, volume, reps e duração são o conteúdo. Número grande e tabular; rótulo pequeno e secundário. Nunca o inverso |
+| **Uma cor de ação** 🆕 | O lima significa *uma* coisa: "aqui é a ação / aqui está o seu progresso". Se tudo é lima, nada é |
 | **Celebre o progresso** | PR, streak e metas alcançadas merecem animação e destaque — é o que traz o usuário de volta |
 | **Nunca perca o dado do usuário** | Otimista sempre, offline sempre, confirmação antes de qualquer destruição |
 
@@ -19,83 +26,104 @@
 
 ## 2. Tokens de design
 
+Fonte de verdade: [`src/theme/tokens.ts`](../src/theme/tokens.ts), espelhada em
+[`tailwind.config.js`](../tailwind.config.js). **Zero hex em componente.**
+
 ### 2.1 Cores
 
 ```ts
-// src/theme/tokens.ts
 export const palette = {
-  // Marca — verde energia
+  // Lima ácido — a assinatura
   brand: {
-    50:'#ECFDF5', 100:'#D1FAE5', 200:'#A7F3D0', 300:'#6EE7B7', 400:'#34D399',
-    500:'#22C55E', 600:'#16A34A', 700:'#15803D', 800:'#166534', 900:'#14532D',
+    50:'#F4FFE0', 100:'#E9FFC0', 200:'#DEFF96', 300:'#DBFF6B', 400:'#D2FF3A',
+    500:'#C2F224', 600:'#A3CC1F', 700:'#7A991A', 800:'#4F6610', 900:'#2E3B0A',
   },
-  // Neutros — base do tema escuro
+  // Neutros levemente esverdeados — preto puro vibra ao lado do lima
   neutral: {
-    0:'#FFFFFF',  50:'#FAFAFA', 100:'#F4F4F5', 200:'#E4E4E7', 300:'#D4D4D8',
-    400:'#A1A1AA', 500:'#71717A', 600:'#52525B', 700:'#3F3F46', 800:'#27272A',
-    900:'#18181B', 950:'#0B0B0F',
+    0:'#FFFFFF',  50:'#F5F7F2', 100:'#E8EBE4', 200:'#CFD4C9', 300:'#A8B0A2',
+    400:'#767C72', 500:'#565B53', 600:'#3D423B', 700:'#2F332C', 800:'#21251F',
+    900:'#161915', 950:'#0A0B0A',
   },
-  // Semânticos
-  success:'#22C55E', warning:'#F59E0B', danger:'#EF4444', info:'#3B82F6',
-  // Acentos de dado (gráficos, PR, grupos musculares)
-  accent: { pr:'#FBBF24', volume:'#8B5CF6', streak:'#F97316' },
-} as const;
-
-export const light = {
-  bg:            palette.neutral[50],
-  bgElevated:    palette.neutral[0],
-  bgSubtle:      palette.neutral[100],
-  border:        palette.neutral[200],
-  text:          palette.neutral[900],
-  textSecondary: palette.neutral[500],
-  textInverse:   palette.neutral[0],
-  primary:       palette.brand[600],
-  primaryText:   palette.neutral[0],
-} as const;
-
-export const dark = {
-  bg:            palette.neutral[950],
-  bgElevated:    palette.neutral[900],
-  bgSubtle:      palette.neutral[800],
-  border:        palette.neutral[800],
-  text:          palette.neutral[50],
-  textSecondary: palette.neutral[400],
-  textInverse:   palette.neutral[950],
-  primary:       palette.brand[500],
-  primaryText:   palette.neutral[950],
+  success:'#7AE582', warning:'#FFC53D', danger:'#FF5C5C', info:'#4FC3F7',
+  accent: { pr:'#FFC53D', volume:'#D2FF3A', streak:'#FF7A2F', series:'#A78BFA', rest:'#4FC3F7' },
 } as const;
 ```
 
-**Uso semântico obrigatório** — nunca usar hex direto no componente:
+#### ⚠️ A regra que sustenta o sistema
+
+O lima é uma cor **clara**. Isso tem uma consequência dura e não negociável:
+
+| Combinação | Contraste medido | Veredito |
+|---|---|---|
+| `neutral-950` sobre `brand-400` (CTA) | **17.0:1** | ✅ AAA — **é assim que se usa lima** |
+| `brand-400` como texto sobre `neutral-950` | **17.0:1** | ✅ AAA |
+| `brand-400` como texto sobre card `neutral-900` | **15.29:1** | ✅ AAA |
+| `brand-800` como texto sobre branco | **6.48:1** | ✅ AA — único passo que passa no tema claro |
+| `brand-600` como texto sobre branco | **1.87:1** | ❌ **Proibido** |
+| **branco sobre `brand-400`** | **1.16:1** | ❌ **Proibido — nunca, em hipótese alguma** |
+
+> **Lima nunca recebe texto branco.** Preenchimento lima → texto `neutral-950`.
+> Lima como texto em fundo claro → `brand-800` (token `accentText`).
+> Isso já está codificado: `primaryText` e `accentText` em `tokens.ts` resolvem por tema.
+
+#### Uso semântico obrigatório
 
 | Papel | Token | Exemplo de uso |
 |---|---|---|
-| Ação primária | `primary` | Botão "Iniciar treino", série concluída |
+| Ação primária | `primary` + `primaryText` | Botão "Iniciar treino", série concluída, chip selecionado |
+| Lima como texto/link | `accentText` | "Criar agora", valor em destaque |
 | Sucesso / PR | `success` / `accent.pr` | Checkbox marcado, badge de recorde |
 | Perigo | `danger` | Excluir, cancelar treino |
 | Aviso | `warning` | Banner de offline |
-| Volume (gráficos) | `accent.volume` | Barras de volume |
-| Streak | `accent.streak` | Ícone de fogo |
+| Volume (gráficos) | `accent.volume` | Barras e anéis de volume |
+| Streak | `accent.streak` | Ícone de fogo, faixa de sequência |
+| Descanso | `accent.rest` | Timer, barra de descanso |
+| Trilho de progresso | `track` | Fundo de anel e barra |
+
+Séries de gráfico com N linhas usam `dataSeries` na ordem — todas ≥ 6.5:1 sobre o fundo escuro.
+
+#### Contrastes de texto verificados
+
+| Par | Medido | Exigido |
+|---|---|---|
+| `neutral-50` sobre `neutral-950` | 18.28:1 | 4.5 ✅ |
+| `neutral-300` (secundário) sobre `neutral-950` | 8.82:1 | 4.5 ✅ |
+| `neutral-300` (secundário) sobre card `neutral-900` | 7.94:1 | 4.5 ✅ |
+| `neutral-400` (terciário) sobre `neutral-950` | 4.60:1 | 3 ✅ |
+| `neutral-900` sobre `neutral-50` (claro) | 16.44:1 | 4.5 ✅ |
+| `neutral-500` (secundário claro) sobre `neutral-50` | 6.45:1 | 4.5 ✅ |
+
+> No tema claro os semânticos usam variantes escurecidas (`danger-ink`, `warning-ink`,
+> `success-ink`) — os tons do tema escuro reprovam em fundo branco.
 
 ### 2.2 Tipografia
 
 Fonte: **Inter** (variável), via `expo-font`. Fallback para a fonte do sistema.
 
-| Estilo | Tamanho | Peso | Line-height | Uso |
-|---|---|---|---|---|
-| `display` | 32 | 700 | 40 | Números grandes do resumo (volume, duração) |
-| `h1` | 28 | 700 | 36 | Título de tela |
-| `h2` | 22 | 600 | 28 | Seção |
-| `h3` | 18 | 600 | 24 | Card, nome de exercício |
-| `body` | 16 | 400 | 24 | Texto padrão |
-| `bodyMedium` | 16 | 500 | 24 | Texto com ênfase |
-| `caption` | 14 | 400 | 20 | Texto secundário |
-| `label` | 13 | 500 | 16 | Rótulo de campo, cabeçalho de tabela |
-| `micro` | 11 | 500 | 14 | Badge, contador |
-| `numeric` | 18 | 600 | 24 | **Tabular** — kg e reps (evita "pulo" de largura ao mudar o número) |
+| Estilo | Tamanho | Peso | LH | Tracking | Uso |
+|---|---|---|---|---|---|
+| `metricXl` 🆕 | 56 | 700 | 60 | −1.5 | Contador de reps no player, número herói de tela cheia |
+| `metric` 🆕 | 40 | 700 | 44 | −1 | Número principal de card (volume, duração, % da meta) |
+| `display` | 32 | 700 | 40 | −0.5 | Números grandes do resumo |
+| `h1` | 28 | 700 | 36 | −0.4 | Título de tela |
+| `h2` | 22 | 600 | 28 | — | Seção |
+| `h3` | 18 | 600 | 24 | — | Card, nome de exercício |
+| `body` | 16 | 400 | 24 | — | Texto padrão |
+| `bodyMedium` | 16 | 500 | 24 | — | Texto com ênfase |
+| `caption` | 14 | 400 | 20 | — | Texto secundário |
+| `label` | 13 | 500 | 16 | — | Rótulo de campo |
+| `micro` | 11 | 500 | 14 | — | Badge, contador |
+| `overline` 🆕 | 11 | 600 | 14 | +1.2 | **CAIXA ALTA** acima de cada bloco do dashboard |
+
+**Regra do par número+unidade** 🆕 — a unidade nunca compete com o número:
+
+```
+11.240        ← metric, text (neutral-50)
+/ 16.000 kg   ← caption, textTertiary
+```
 
 > `fontVariant: ['tabular-nums']` é **obrigatório** em qualquer número que muda em tempo real
-> (cronômetro, timer, carga). Sem isso o layout treme.
+> (cronômetro, timer, carga, contador de reps). Sem isso o layout treme.
 
 ### 2.3 Espaçamento (escala de 4pt)
 
@@ -103,24 +131,37 @@ Fonte: **Inter** (variável), via `expo-font`. Fallback para a fonte do sistema.
 |---|---|---|
 | `xs` | 4 | Entre ícone e texto |
 | `sm` | 8 | Interno de badge, gap pequeno |
-| `md` | 12 | Padding de item de lista |
-| `lg` | 16 | **Padding padrão da tela** |
+| `md` | 12 | Padding de item de lista, **gap entre cards do bento** |
+| `lg` | 16 | **Padding padrão da tela e interno do card** |
 | `xl` | 24 | Entre seções |
 | `2xl` | 32 | Respiro de topo |
 | `3xl` | 48 | Estados vazios |
 
 ### 2.4 Raios e elevação
 
+Os raios subiram — a linguagem depende disso. Um card a 20 lê como "superfície";
+o mesmo card a 12 lê como "caixa".
+
 | Token | Valor | Uso |
 |---|---|---|
-| `radius.sm` | 8 | Chip, badge |
-| `radius.md` | 12 | Input, botão |
-| `radius.lg` | 16 | Card |
-| `radius.xl` | 24 | Bottom sheet, modal |
-| `radius.full` | 999 | Avatar, pill |
+| `radius.sm` | 10 | Chip pequeno, badge, thumb |
+| `radius.md` | 14 | Input, botão pequeno |
+| `radius.lg` | **20** | **Card padrão** |
+| `radius.xl` | **28** | Card de destaque, CTA grande, hero |
+| `radius.2xl` | **36** | Bottom sheet, modal, overlay de tela cheia |
+| `radius.full` | 999 | Avatar, pill, chip de filtro, FAB |
 
-Elevação: sombra sutil no tema claro; no tema escuro usar **diferença de background** (`bgElevated`)
-em vez de sombra — sombra em fundo preto não aparece.
+**Elevação no tema escuro = degrau de superfície, não sombra.** Sombra em fundo preto não
+aparece. A escada é `bg` → `bgElevated` → `bgSubtle`:
+
+| Camada | Token | Separação medida |
+|---|---|---|
+| Fundo da tela | `neutral-950` | — |
+| Card | `neutral-900` | 1.11:1 vs. fundo — visível como camada, invisível como cor |
+| Preenchimento dentro do card (input, linha de série) | `neutral-800` | 1.14:1 vs. card |
+| Borda | `neutral-800` | 1.27:1 vs. fundo |
+
+No tema claro, elevação continua sendo sombra sutil + `bgElevated` branco.
 
 ### 2.5 Animação
 
@@ -128,13 +169,15 @@ em vez de sombra — sombra em fundo preto não aparece.
 |---|---|---|
 | Toque em botão (escala 0.97) | 100ms | `ease-out` |
 | Transição entre telas | 250ms | `ease-in-out` |
-| Bottom sheet | 300ms | spring (damping 20) |
-| Marcar série (check) | 200ms | spring |
+| Bottom sheet | spring | damping 20 · stiffness 180 |
+| Marcar série (check) | spring | damping 14 · stiffness 220 |
+| **Preenchimento de anel** 🆕 | 700ms | `ease-out`, sempre a partir do zero ao montar |
+| **"Get ready" 3-2-1** 🆕 | 3× 1000ms | escala 1.2→1 + fade por dígito |
 | Celebração de PR | 800ms | spring + confete |
 | Skeleton shimmer | 1200ms | loop linear |
 
 > Respeitar `AccessibilityInfo.isReduceMotionEnabled()` — com "reduzir movimento" ativo,
-> trocar animação por fade simples.
+> anel aparece já preenchido, "get ready" vira um aviso estático de 1s, confete não roda.
 
 ---
 
@@ -161,7 +204,24 @@ em vez de sombra — sombra em fundo preto não aparece.
 | `Switch` | — | — |
 | `Screen` | — | Wrapper com SafeArea, scroll e padding padrão |
 
-### 3.2 Componentes de domínio
+### 3.2 Novos primitivos da v2 🆕
+
+| Componente | Descrição | Onde entra |
+|---|---|---|
+| `RingStat` | Anel de progresso com número no centro e rótulo abaixo. Tamanhos sm 48 / md 96 / lg 160, stroke 5/8/12 | Meta semanal, % da ficha concluída, progresso da meta |
+| `GaugeArc` | Arco aberto de 240° com valor e alvo | Volume da semana vs. meta, carga vs. PR |
+| `MetricTile` | Número grande + unidade pequena + rótulo `overline`. Opcional: ícone e delta colorido | Bento do dashboard, resumo pós-treino |
+| `BentoGrid` | Grade 2×N de `MetricTile` com gap 12 | Dashboard, resumo, detalhe do exercício |
+| `HeroCard` | Capa (imagem **ou** bloco na cor do grupo muscular) + scrim + título + `MetaChip`s | Ficha, template, exercício |
+| `MetaChip` | Pill translúcido com ícone: `⏱ 45 min`, `🎯 Peito`, `📊 Intermediário` | Sobre `HeroCard` |
+| `PillTabs` | Segmented em formato de pill, item ativo com preenchimento lima e texto tinta | Rotinas/Templates, Dia/Semana/Mês |
+| `FilterBar` | Linha `⚙ Filtros · ↕ Ordenar · 🔍 Buscar` fixa abaixo do header | Biblioteca, histórico, templates |
+| `TabBarFab` | Tab bar com botão `+` circular lima elevado no centro | Global (ver 4.3) |
+| `StreakStrip` | 7 dias em linha, dia treinado com check lima, hoje com anel | Dashboard |
+| `CelebrationSheet` | Sheet lima de altura média, check grande em círculo tinta, título e CTA | PR, treino concluído, meta batida |
+| `AuroraBackground` | Gradiente mesh suave atrás do conteúdo (só boas-vindas e onboarding) | Auth/onboarding |
+
+### 3.3 Componentes de domínio
 
 | Componente | Onde é usado | Descrição |
 |---|---|---|
@@ -174,92 +234,89 @@ em vez de sombra — sombra em fundo preto não aparece.
 | `WorkoutDayCard` | Detalhe da rotina | Nome, nº de exercícios, duração estimada |
 | `PlanCard` | Treinos | Capa, nome, nível, dias/semana |
 | `PRBadge` | Resumo, exercício | Badge dourado com o valor e o ganho |
-| `StatTile` | Dashboard, resumo | Número grande + rótulo |
+| `StatTile` | Dashboard, resumo | → substituído por `MetricTile` |
 | `VolumeChart` | Dashboard, progresso | Barras de volume por semana |
 | `ProgressLineChart` | Exercício, peso | Linha temporal |
 | `MuscleDistribution` | Progresso | Barras horizontais por grupo muscular |
 | `FrequencyHeatmap` | Progresso | Grade estilo GitHub |
-| `CalendarStrip` | Dashboard | Semana atual com dias treinados marcados |
+| `CalendarStrip` | Dashboard | → substituído por `StreakStrip` |
 | `MeasurementRow` | Medidas | Campo com unidade e delta em relação à medição anterior |
+| `GetReadyOverlay` 🆕 | Player | Tela cheia lima, contagem 3-2-1 antes da primeira série |
+| `RepCounter` 🆕 | Player (modo foco) | Número gigante sobre a mídia, com Anterior/Próximo |
 
-### 3.3 Exemplo de implementação — `Button`
+### 3.4 Exemplo — `Button` com a regra do lima
 
 ```tsx
 // src/components/ui/Button.tsx
-import { Pressable, Text, ActivityIndicator, View } from 'react-native';
-import * as Haptics from 'expo-haptics';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
-type Size = 'sm' | 'md' | 'lg';
-
-const variantClasses: Record<Variant, string> = {
-  primary:   'bg-brand-500 active:bg-brand-600',
-  secondary: 'bg-neutral-800 active:bg-neutral-700',
+const variantClass: Record<Variant, string> = {
+  primary:   'bg-brand-400',                    // ← preenchimento lima
+  secondary: 'bg-neutral-200 dark:bg-neutral-800',
   ghost:     'bg-transparent',
-  danger:    'bg-danger active:opacity-90',
+  danger:    'bg-danger',
 };
 
-const sizeClasses: Record<Size, string> = {
-  sm: 'h-10 px-4',
-  md: 'h-12 px-5',
-  lg: 'h-14 px-6',   // ← altura mínima confortável para o CTA principal
+const textClass: Record<Variant, string> = {
+  primary:   'text-neutral-950',                // ← 17:1. NUNCA text-white aqui
+  secondary: 'text-neutral-900 dark:text-neutral-50',
+  ghost:     'text-brand-800 dark:text-brand-400',  // ← 6.48:1 claro / 17:1 escuro
+  danger:    'text-white',
 };
-
-export function Button({
-  title, onPress, variant = 'primary', size = 'md',
-  loading = false, disabled = false, icon, haptic = true, fullWidth = false,
-}: ButtonProps) {
-  const scale = useSharedValue(1);
-  const style = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
-  const isDisabled = disabled || loading;
-
-  return (
-    <Animated.View style={style} className={fullWidth ? 'w-full' : undefined}>
-      <Pressable
-        onPressIn={() => { scale.value = withSpring(0.97); }}
-        onPressOut={() => { scale.value = withSpring(1); }}
-        onPress={() => {
-          if (haptic) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          onPress();
-        }}
-        disabled={isDisabled}
-        accessibilityRole="button"
-        accessibilityLabel={title}
-        accessibilityState={{ disabled: isDisabled, busy: loading }}
-        className={`flex-row items-center justify-center gap-2 rounded-xl
-                    ${variantClasses[variant]} ${sizeClasses[size]}
-                    ${isDisabled ? 'opacity-50' : ''}`}
-      >
-        {loading ? <ActivityIndicator size="small" /> : (
-          <>
-            {icon && <View>{icon}</View>}
-            <Text className="text-base font-semibold text-white">{title}</Text>
-          </>
-        )}
-      </Pressable>
-    </Animated.View>
-  );
-}
 ```
 
 ---
 
 ## 4. Regras de layout
 
+### 4.1 Medidas
+
 | Regra | Valor |
 |---|---|
 | Padding horizontal da tela | 16pt |
+| Padding interno do card | 16pt |
+| Gap entre cards do bento | 12pt |
 | Altura mínima de alvo de toque | **44pt** (iOS HIG) / 48dp (Material) |
 | Altura do botão primário (CTA) | 56pt |
 | Altura de linha de lista | ≥ 56pt |
-| Altura da tab bar | 56pt + safe area inferior |
+| Altura da tab bar | **64pt** + safe area inferior |
+| Diâmetro do FAB central | 56pt |
 | Altura do header | 56pt + safe area superior |
+| Altura da capa em tela com herói | 260pt |
 | Largura máxima de conteúdo em tablet | 600pt centralizado |
 | Distância mínima entre alvos de toque | 8pt |
 
 **Zona do polegar:** ações primárias sempre no terço inferior da tela. Ações destrutivas nunca perto
 de ações frequentes (evita toque acidental ao suar).
+
+### 4.2 Ritmo vertical da tela 🆕
+
+Toda tela de conteúdo segue a mesma cadência:
+
+```
+Header (título + ação)
+↓ 24
+Bloco herói          ← card de destaque OU anel OU CTA principal
+↓ 24
+OVERLINE DA SEÇÃO
+↓ 12
+Conteúdo da seção
+↓ 24
+OVERLINE DA SEÇÃO
+↓ 12
+Conteúdo da seção
+```
+
+### 4.3 Tab bar com FAB central 🆕
+
+Cinco posições, com o `+` elevado no centro:
+
+```
+🏠 Início   🏋️ Treinos   [ + ]   📈 Progresso   👤 Perfil
+```
+
+O `+` abre um sheet de ação rápida: **Iniciar treino livre · Nova rotina · Registrar medida ·
+Nova foto de progresso**. Item ativo usa ícone e rótulo em lima; inativo em `textTertiary`.
+
+> A tab bar continua oculta no player e em modais (regra da seção 8).
 
 ---
 
@@ -267,13 +324,15 @@ de ações frequentes (evita toque acidental ao suar).
 
 | Requisito | Como validar |
 |---|---|
-| Contraste ≥ 4.5:1 (texto normal) e 3:1 (texto grande) | Checar tokens no Contrast Checker |
+| Contraste ≥ 4.5:1 (texto normal) e 3:1 (texto grande/UI) | **Tabelas da seção 2.1 — já medidas.** Reexecutar ao mudar qualquer token |
+| Nenhum texto branco sobre lima | Revisão + busca por `text-white` junto de `bg-brand` |
 | Todo controle tem `accessibilityLabel` e `accessibilityRole` | Lint + revisão |
 | `accessibilityState` reflete selecionado/desabilitado/ocupado | Revisão |
-| Layout suporta fonte até 200% | Testar com Dynamic Type no máximo |
-| Não depender só de cor | Série concluída tem check **e** cor |
+| Layout suporta fonte até 200% | Testar com Dynamic Type no máximo — **atenção ao `metricXl`**, que deve encolher, não cortar |
+| Não depender só de cor | Série concluída tem check **e** cor; anel tem número **e** arco |
+| Anel de progresso anuncia valor | `accessibilityRole="progressbar"` + `accessibilityValue={{ min, max, now }}` |
 | Foco de leitor de tela segue a ordem visual | VoiceOver / TalkBack |
-| Reduzir movimento respeitado | `AccessibilityInfo` |
+| Reduzir movimento respeitado | `AccessibilityInfo` — ver seção 2.5 |
 | Alvos ≥ 44×44pt | Revisão de design |
 | Campos de formulário com label associado e erro anunciado | Testar com leitor |
 
@@ -292,6 +351,7 @@ registrar série, finalizar treino.
 | Confirmação destrutiva | Deixar a consequência clara | "Excluir este treino? Os registros do histórico serão mantidos." |
 | Celebração | Curta e específica | "Novo recorde! Supino Reto 77,5 kg 🎉" |
 | Botões | Verbo no infinitivo | "Iniciar treino", "Salvar rotina" |
+| `overline` de seção 🆕 | Substantivo curto, caixa alta, sem artigo | "ESTA SEMANA", "ÚLTIMOS RECORDES" |
 
 **Nunca escrever:** "Erro 500", "null", "undefined", "Falha na requisição", nomes de tabela.
 
@@ -305,6 +365,7 @@ registrar série, finalizar treino.
 | Timer | `01:23` (mm:ss) |
 | Data | `Hoje`, `Ontem`, `Seg, 12 ago` |
 | Percentual | `+12%` com sinal e cor |
+| Progresso de meta 🆕 | `2 / 3` — atual em `metric`, alvo em `caption` secundário |
 
 ---
 
@@ -312,32 +373,37 @@ registrar série, finalizar treino.
 
 | Asset | Tamanho | Formato | Observação |
 |---|---|---|---|
-| Ícone do app | 1024×1024 | PNG sem transparência | Base para todos os tamanhos |
+| Ícone do app | 1024×1024 | PNG sem transparência | Base para todos os tamanhos. **Lima sobre `#0A0B0A`** |
 | Ícone adaptativo Android | 1024×1024 (foreground) | PNG com transparência | Conteúdo na área segura central de 66% |
-| Splash | 1284×2778 | PNG | Fundo `#0B0B0F` |
+| Splash | 1284×2778 | PNG | Fundo `#0A0B0A` |
 | Ícone de notificação Android | 96×96 | PNG branco sobre transparente | Android exige silhueta |
-| Ilustrações de estado vazio | SVG | 6 variações | Sem rotina, sem histórico, sem exercício, sem medida, sem meta, offline |
+| Ilustrações de estado vazio | SVG | 6 variações | Traço lima sobre transparente, peso 2pt |
 | Mídia dos exercícios | 600×600 | WebP / GIF | 138 itens — **fora da v1** (ver abaixo) |
 | Sons | — | MP3 curto | `rest-end.mp3`, `pr-achieved.mp3` |
 | Screenshots das lojas | ver [doc 09](./09-publicacao-nas-lojas.md) | PNG | 6–8 por plataforma |
 
+> **Fotografia:** as referências da doc 12 usam banco de imagens de terceiros. Nenhuma delas
+> pode ir para o produto. A v1 não depende de foto — o sistema de capa por cor (abaixo)
+> foi desenhado justamente para isso.
+
 ### Exercícios sem imagem — o fallback
 
 A v1 lança **sem GIFs de execução** ([decisão D3](./11-decisoes-e-pendencias.md#d3--mídia-dos-exercícios)).
-Onde não há mídia, a UI mostra um bloco quadrado com a **cor do grupo muscular** (`muscle_groups.color_hex`)
-e o ícone do equipamento. Isso vale para `ExerciseListItem`, `ExerciseCard` e o cabeçalho do detalhe.
+Onde não há mídia, a UI mostra um bloco com a **cor do grupo muscular** (`muscle_groups.color_hex`)
+e o ícone do equipamento. Isso vale para `ExerciseListItem`, `ExerciseCard`, `HeroCard` e o
+cabeçalho do detalhe.
 
 ```tsx
 // src/components/exercise/ExerciseThumb.tsx
 export function ExerciseThumb({ exercise, size = 48 }: Props) {
   if (exercise.thumbnailUrl) {
     return <Image source={exercise.thumbnailUrl} style={{ width: size, height: size }}
-                  className="rounded-lg" contentFit="cover" />;
+                  className="rounded-sm" contentFit="cover" />;
   }
   return (
     <View
       style={{ width: size, height: size, backgroundColor: `${exercise.muscleGroup.colorHex}22` }}
-      className="items-center justify-center rounded-lg"
+      className="items-center justify-center rounded-sm"
       accessibilityLabel={`${exercise.muscleGroup.namePt}, ${exercise.equipment?.namePt ?? 'sem equipamento'}`}
     >
       <EquipmentIcon slug={exercise.equipment?.slug} size={size * 0.5}
@@ -347,10 +413,11 @@ export function ExerciseThumb({ exercise, size = 48 }: Props) {
 }
 ```
 
-O resultado é consistente e colorido — a lista não parece quebrada, e as **instruções escritas**
-(que já vêm no seed dos 138 exercícios) cobrem a necessidade real de quem está treinando.
-Quando as imagens forem licenciadas, basta preencher `thumbnail_path` — o componente passa a
-usá-las sem nenhuma mudança de código.
+No `HeroCard` o mesmo bloco vira uma capa de 260pt com gradiente do `color_hex` para
+`neutral-950`, e o título fica sobre o scrim. O resultado é consistente e colorido — a tela
+não parece quebrada, e as **instruções escritas** (que já vêm no seed dos 138 exercícios)
+cobrem a necessidade real de quem está treinando. Quando as imagens forem licenciadas, basta
+preencher `thumbnail_path`.
 
 ---
 
@@ -359,7 +426,24 @@ usá-las sem nenhuma mudança de código.
 - Padrão: **escuro**. `userInterfaceStyle: 'automatic'` no `app.config.ts`.
 - Preferência do usuário (`user_settings.theme`) sobrescreve o do sistema.
 - Todo componente lê cor do `ThemeProvider` — **zero hex hardcoded**.
+- O tema claro **não é o escuro invertido**: lima vira `brand-800` como texto, semânticos usam
+  as variantes `-ink`, e a elevação volta a ser sombra.
 - Testar as duas telas críticas (player e dashboard) nos dois temas antes de fechar cada fase.
+
+---
+
+## 9. Migração da v1 para a v2
+
+| Item | Status |
+|---|---|
+| `src/theme/tokens.ts` — paleta, raios, tipografia, `ring`, `motion` | ✅ Aplicado |
+| `tailwind.config.js` — espelho dos tokens | ✅ Aplicado |
+| `bg/border-brand-500` → `-brand-400` (20 ocorrências) | ✅ Aplicado |
+| `text-brand-600 dark:text-brand-500` → `text-brand-800 dark:text-brand-400` (6 ocorrências) | ✅ Aplicado |
+| `typecheck` + `lint` limpos após a troca | ✅ Verificado |
+| Novos primitivos da seção 3.2 | ⬜ Fase 3+ (ver [roadmap](./08-roadmap-e-fases.md)) |
+| Tab bar com FAB central | ⬜ Fase 3 |
+| Telas redesenhadas | ⬜ Ver [mapa de telas](./05-mapa-de-telas.md) |
 
 ---
 

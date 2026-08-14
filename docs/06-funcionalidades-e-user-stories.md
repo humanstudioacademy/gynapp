@@ -311,6 +311,78 @@
 
 ---
 
+## Épico 12 — Interface v2 🟡
+
+> Nasceu da análise das referências visuais ([doc 12](./12-referencias-visuais.md)) e depende do
+> design system v2 ([doc 07](./07-design-system-e-ux.md)). **Nenhuma destas histórias exige tabela
+> nova** — todas leem dados que o banco já entrega. As que exigiriam estão em §4.2 da doc 12.
+
+### US-12.1 — Anel de meta semanal 🟡
+**Como** usuário **quero** ver de relance se estou em dia com a meta da semana **para** decidir se treino hoje.
+- [ ] `RingStat` no topo do dashboard com `treinos_realizados / meta_semanal`
+- [ ] Fonte: `get_dashboard_summary()` — sem consulta nova
+- [ ] Anel completo muda para estado "meta batida" (preenchimento cheio + check)
+- [ ] Frase de apoio muda conforme o estado: "Falta 1 pra fechar" · "Meta batida 🎉" · "Bora começar a semana"
+- [ ] `accessibilityRole="progressbar"` com `accessibilityValue`
+- [ ] Com "reduzir movimento" ativo, aparece já preenchido
+
+### US-12.2 — Progresso da ficha no player 🟡
+**Como** usuário **quero** saber quanto falta do treino **sem** contar séries na tela.
+- [ ] `RingStat` pequeno no header do player com % de séries concluídas
+- [ ] Atualiza a cada série marcada, junto com o haptic
+- [ ] Número de séries (`8/18`) continua acessível ao leitor de tela
+
+### US-12.3 — Faixa de sequência de 7 dias 🟢
+**Como** usuário **quero** ver quais dias treinei na semana **para** não perder o ritmo.
+- [ ] `StreakStrip` com os 7 dias, check lima no dia treinado e anel no dia de hoje
+- [ ] Complementa (não substitui) o contador de semanas da US-6.4
+- [ ] Toque em um dia abre a sessão daquele dia, se houver
+
+### US-12.4 — Duração estimada da ficha 🟡
+**Como** usuário **quero** saber quanto tempo o treino leva **para** decidir se cabe no meu dia.
+- [ ] Estimativa exibida no card da ficha, no dashboard e na galeria de templates
+- [ ] Calculada a partir de `workout_exercises` (ver RN-14) — sem campo novo
+- [ ] Depois de 3 sessões da mesma ficha, passa a usar a **mediana real** do histórico
+- [ ] Formato `~55 min`; o til deixa claro que é estimativa
+
+### US-12.5 — Metadados no card da ficha 🟢
+**Como** usuário **quero** identificar a ficha sem abrir **para** escolher mais rápido.
+- [ ] `MetaChip`s com duração, grupos musculares predominantes e nível da rotina
+- [ ] Capa usa a cor do grupo muscular predominante quando não há imagem
+- [ ] Máximo de 3 chips; o resto vira `+2`
+
+### US-12.6 — Modo foco no player 🟢
+**Como** usuário que segue a prescrição **quero** ver um exercício por vez **para** não me perder na lista.
+- [ ] Alternável pelo menu `⋮`; modo lista continua o padrão
+- [ ] `RepCounter` gigante, carga e reps abaixo, Anterior/Próxima
+- [ ] Preferência persiste em `user_settings`
+- [ ] Trocar de modo preserva série atual, cronômetro e timer de descanso
+- [ ] "Ver todas as séries" volta ao modo lista a um toque
+
+### US-12.7 — Ação rápida no FAB 🟡
+**Como** usuário **quero** as ações frequentes a um toque de qualquer tela.
+- [ ] Botão `+` central na tab bar abre sheet com: treino livre · nova rotina · registrar medida · nova foto
+- [ ] Disponível em todas as abas; ausente no player e em modais
+- [ ] Cada item leva à tela já existente (nenhuma rota nova além do sheet)
+
+### US-12.8 — Celebração unificada 🟡
+**Como** usuário **quero** que conquistas tenham um momento claro **para** sentir o progresso.
+- [ ] `CelebrationSheet` único para: novo PR, treino concluído, meta batida
+- [ ] Haptic de sucesso + som opcional (respeita a preferência de som)
+- [ ] Confete só quando "reduzir movimento" está desligado
+- [ ] Sempre dispensável a um toque — nunca bloqueia o fluxo
+
+### US-12.9 — Metas por grupo muscular 🟢 *(v1.1)*
+- [ ] Tipo novo de meta: "N treinos de [grupo] por semana"
+- [ ] ⚠️ Exige valor novo no enum de `user_goals` — **fora da v1**
+
+### US-12.10 — Conquistas 🟢 *(v1.1)*
+- [ ] Marcos derivados de dados existentes: nº de treinos, streak, PRs, volume acumulado
+- [ ] Sem moeda virtual, sem anúncio, sem resgate ([doc 12, §3](./12-referencias-visuais.md))
+- [ ] ⚠️ Exige tabelas `achievements` e `user_achievements` — **fora da v1**
+
+---
+
 ## Regras de negócio consolidadas
 
 | # | Regra |
@@ -328,6 +400,7 @@
 | RN-11 | Streak = semanas consecutivas em que o nº de treinos ≥ meta semanal |
 | RN-12 | Sessão sem nenhuma série concluída não pode ser finalizada (só cancelada) |
 | RN-13 | `client_id` garante idempotência: reenviar a mesma operação não duplica registro |
+| RN-14 | Duração estimada da ficha = `300s` (aquecimento) `+ Σ target_sets × (execução + target_rest_seconds)`, onde execução = `target_duration_seconds` ou **30s** quando nulo. Exercícios com o mesmo `superset_group` só contam o descanso na última série do grupo. A partir de 3 sessões concluídas da ficha, a estimativa é substituída pela **mediana real** da duração |
 
 ---
 
@@ -346,10 +419,15 @@
 | 9 — Notificações | 1 | 1 | 1 | 6 |
 | 10 — Configurações | 2 | 1 | 1 | 6 |
 | 11 — Qualidade | 2 | 1 | 0 | 7 |
-| **Total** | **24** | **10** | **7** | |
+| 12 — Interface v2 | 0 | 5 | 5 | 3–5 (ver roadmap) |
+| **Total** | **24** | **15** | **12** | |
 
 **Corte de escopo se o prazo apertar:** todos os 🟢 podem sair da v1 sem prejudicar o produto.
 Os 🔴 são inegociáveis — sem eles o app não tem sentido ou é rejeitado na loja.
+
+O Épico 12 é inteiramente 🟡/🟢 **de propósito**: é acabamento sobre funcionalidade que já existe.
+Se o prazo apertar, o app lança com a v2 de tokens (já aplicada) e sem os componentes novos —
+o visual muda, o escopo não.
 
 ---
 

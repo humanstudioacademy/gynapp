@@ -1,26 +1,58 @@
-import * as Notifications from 'expo-notifications';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { Platform } from 'react-native';
 
 const REST_CHANNEL = 'rest-timer';
 
-/** Notificação aparece mesmo com o app aberto — o usuário pode estar na tela do player. */
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowBanner: true,
-    shouldShowList: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+/**
+ * `expo-notifications` **não pode ser importado no topo do módulo**.
+ *
+ * Ao carregar, o pacote registra um listener de push token
+ * (`DevicePushTokenAutoRegistration`). No Expo Go do Android isso lança desde o
+ * SDK 53, e o erro sobe na cadeia de import — derrubando o player inteiro antes
+ * de qualquer notificação ser agendada.
+ *
+ * Por isso o import é dinâmico e só acontece onde notificação é suportada. No
+ * Expo Go do Android o timer continua funcionando: o aviso vem por vibração e
+ * haptic dentro do app, só não toca com o app fechado. Isso volta ao normal no
+ * development build.
+ */
+const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 
-let permissionChecked = false;
+export const notificationsSupported =
+  Platform.OS !== 'web' && !(Platform.OS === 'android' && isExpoGo);
 
-export async function ensureNotificationPermission(): Promise<boolean> {
-  if (Platform.OS === 'web') return false;
+type NotificationsModule = typeof import('expo-notifications');
 
-  if (!permissionChecked) {
-    permissionChecked = true;
-    // Canal com som e vibração — no Android a importância é definida aqui, não na notificação.
+let modulePromise: Promise<NotificationsModule | null> | null = null;
+let handlerSet = false;
+let channelReady = false;
+
+async function getNotifications(): Promise<NotificationsModule | null> {
+  if (!notificationsSupported) return null;
+
+  modulePromise ??= import('expo-notifications')
+    .then((mod) => mod)
+    .catch(() => null);
+
+  const Notifications = await modulePromise;
+  if (!Notifications) return null;
+
+  if (!handlerSet) {
+    handlerSet = true;
+    // Aparece mesmo com o app aberto — o usuário pode estar na tela do player.
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowBanner: true,
+        shouldShowList: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+      }),
+    });
+  }
+
+  if (Platform.OS === 'android' && !channelReady) {
+    channelReady = true;
+    // No Android o som e a vibração são definidos no canal, não na notificação.
     await Notifications.setNotificationChannelAsync(REST_CHANNEL, {
       name: 'Timer de descanso',
       importance: Notifications.AndroidImportance.HIGH,
@@ -28,6 +60,13 @@ export async function ensureNotificationPermission(): Promise<boolean> {
       sound: 'default',
     });
   }
+
+  return Notifications;
+}
+
+export async function ensureNotificationPermission(): Promise<boolean> {
+  const Notifications = await getNotifications();
+  if (!Notifications) return false;
 
   const current = await Notifications.getPermissionsAsync();
   if (current.granted) return true;
@@ -45,7 +84,10 @@ export async function scheduleRestEndNotification(
   seconds: number,
   exerciseName?: string,
 ): Promise<string | null> {
-  if (Platform.OS === 'web' || seconds <= 0) return null;
+  if (seconds <= 0) return null;
+
+  const Notifications = await getNotifications();
+  if (!Notifications) return null;
 
   const granted = await ensureNotificationPermission();
   if (!granted) return null;
@@ -65,6 +107,8 @@ export async function scheduleRestEndNotification(
 }
 
 export async function cancelNotification(id: string | null): Promise<void> {
-  if (!id || Platform.OS === 'web') return;
+  if (!id) return;
+  const Notifications = await getNotifications();
+  if (!Notifications) return;
   await Notifications.cancelScheduledNotificationAsync(id);
 }

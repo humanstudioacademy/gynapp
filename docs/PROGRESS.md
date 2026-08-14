@@ -382,6 +382,7 @@ verdade — dá para treinar com ele.
 | **O checkbox saía da tela**: com `flex-1` nos campos, a coluna de concluir ficava cortada — e marcar série é a interação central do app | Larguras fixas no `SetRow`; remover série virou toque longo em vez de um X permanente roubando espaço |
 | O player continuava montado e seu efeito de "sessão sumiu" disparava `router.replace('/')` **por cima da tela de resumo** | Removido o redirecionamento automático: sem sessão, o player mostra estado vazio |
 | `finish_workout_session` calculava duração por relógio de parede — 20 min de pausa entravam no treino | Migration `20260814001600`: coluna `paused_seconds` e o finish subtraindo |
+| **O player não abria no Android**: importar `expo-notifications` no topo do módulo já derruba o Expo Go — o pacote registra um listener de push no carregamento, removido do Expo Go no SDK 53. Os erros seguintes ("missing default export", "ErrorBoundary of undefined") eram consequência do módulo ficar sem exports | `src/lib/notifications.ts` passou a importar por `import()` dinâmico e só onde há suporte. No Expo Go do Android o timer segue funcionando por vibração e haptic; o aviso com o app fechado volta no development build |
 
 ### Ambiente
 

@@ -64,6 +64,49 @@ export function weeklyStreak(
   return streak;
 }
 
+export type PrescribedExercise = {
+  targetSets: number;
+  targetRepsMin: number | null;
+  targetRepsMax: number | null;
+  targetDurationSeconds: number | null;
+  targetRestSeconds: number;
+  supersetGroup: number | null;
+};
+
+/** Segundos por repetição numa cadência normal (concêntrica + excêntrica). */
+const SECONDS_PER_REP = 3;
+/** Piso e teto para não distorcer a conta em séries muito curtas ou longas. */
+const MIN_SET_SECONDS = 20;
+const MAX_SET_SECONDS = 120;
+
+/**
+ * Duração estimada da ficha, em minutos (US-4.3):
+ * `Σ(séries × (tempo de execução + descanso))`.
+ *
+ * Exercícios em bi-set/tri-set descansam uma vez por rodada, não a cada
+ * exercício — por isso o descanso do grupo só conta no último da sequência.
+ */
+export function estimateDayMinutes(exercises: PrescribedExercise[]): number {
+  if (exercises.length === 0) return 0;
+
+  const total = exercises.reduce((seconds, exercise, index) => {
+    const reps = exercise.targetRepsMax ?? exercise.targetRepsMin ?? 10;
+    const execution =
+      exercise.targetDurationSeconds ??
+      Math.min(MAX_SET_SECONDS, Math.max(MIN_SET_SECONDS, reps * SECONDS_PER_REP));
+
+    // Dentro de um bi-set só o último exercício do grupo tem descanso.
+    const next = exercises[index + 1];
+    const inSameGroup =
+      exercise.supersetGroup != null && next != null && next.supersetGroup === exercise.supersetGroup;
+    const rest = inSameGroup ? 0 : exercise.targetRestSeconds;
+
+    return seconds + exercise.targetSets * (execution + rest);
+  }, 0);
+
+  return Math.round(total / 60);
+}
+
 /** Progresso de uma meta em % (0–100), tolerando metas decrescentes (perder peso). */
 export function goalProgress(start: number, current: number, target: number): number {
   if (start === target) return current === target ? 100 : 0;

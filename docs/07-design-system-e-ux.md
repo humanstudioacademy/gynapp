@@ -438,8 +438,9 @@ preencher `thumbnail_path`.
 |---|---|
 | `src/theme/tokens.ts` — paleta, raios, tipografia, `ring`, `motion` | ✅ Aplicado |
 | `tailwind.config.js` — espelho dos tokens | ✅ Aplicado |
-| `bg/border-brand-500` → `-brand-400` (20 ocorrências) | ✅ Aplicado |
-| `text-brand-600 dark:text-brand-500` → `text-brand-800 dark:text-brand-400` (6 ocorrências) | ✅ Aplicado |
+| `bg/border/text-brand-500` → `-brand-400` (27 tokens de classe) | ✅ Aplicado |
+| `text-brand-600` → `text-brand-800` — corrige contraste de link no tema claro (6 tokens) | ✅ Aplicado |
+| Total: **33 tokens de classe em 15 arquivos** | ✅ Aplicado |
 | `typecheck` + `lint` limpos após a troca | ✅ Verificado |
 | Novos primitivos da seção 3.2 | ⬜ Fase 3+ (ver [roadmap](./08-roadmap-e-fases.md)) |
 | Tab bar com FAB central | ⬜ Fase 3 |

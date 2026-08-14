@@ -5,7 +5,7 @@
 > Rastreador vivo do projeto. Atualizar ao fim de cada fase — o que entregou, o que ficou
 > pendente e o que mudou de rumo. O plano em si fica nos documentos numerados; **aqui fica a realidade.**
 
-**Última atualização:** 14/08/2026 · **Fase atual:** ✅ Fase 2 concluída · 🟡 Fase 1 aguardando SMTP e rate limits
+**Última atualização:** 14/08/2026 · **Fase atual:** ✅ Fase 3 concluída · 🟡 Fase 1 aguardando SMTP e rate limits
 
 ---
 
@@ -16,8 +16,8 @@ Planejamento  ██████████████████████
 Fase 0        ██████████████████████████████  100%  ✅ Concluída
 Fase 1        ██████████████████████████░░░░   85%  🟡 Falta SMTP + rate limits
 Fase 2        ██████████████████████████████  100%  ✅ Concluída
-Fase 3        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%  ⏳ Próxima
-Fase 4 ⭐     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
+Fase 3        ██████████████████████████████  100%  ✅ Concluída
+Fase 4 ⭐     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%  ⏳ Próxima
 Fase 5        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
 Fase 6        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
 Fase 7        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
@@ -32,8 +32,8 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 | 0 — Fundação | ✅ **Concluída** | 14/08/26 | 14/08/26 | Expo SDK 57 + banco aplicado e validado |
 | 1 — Auth e perfil | 🟡 **Código pronto** | 14/08/26 | — | Faltam SMTP próprio e rate limits (dependem de conta externa) |
 | 2 — Exercícios | ✅ **Concluída** | 14/08/26 | 14/08/26 | Biblioteca, busca, filtros, detalhe, personalizados e seletor |
-| 3 — Rotinas | ⏳ Próxima | — | — | Templates já seedados; seletor de exercícios já pronto |
-| 4 — Player ⭐ | ⬜ | — | — | **Fase crítica — não reduzir prazo** |
+| 3 — Rotinas | ✅ **Concluída** | 14/08/26 | 14/08/26 | Rotinas, fichas, editor de prescrição, bi-set e galeria de templates |
+| 4 — Player ⭐ | ⏳ Próxima | — | — | **Fase crítica — não reduzir prazo**. Emulador Android já disponível |
 | 5 — Progresso | ⬜ | — | — | |
 | 6 — Corpo e metas | ⬜ | — | — | Abrir contas Apple/Google nesta fase |
 | 7 — Polimento | ⬜ | — | — | Iniciar teste fechado do Play aqui |
@@ -107,6 +107,19 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 | i18n estruturado (`src/i18n/`) com os rótulos dos enums | ✅ |
 | Tema claro/escuro dirigido por `user_settings.theme` | ✅ |
 
+### Código das Fases 2 e 3 (exercícios, rotinas e fichas)
+
+| Artefato | Status |
+|---|---|
+| `src/features/exercises/` — api, hooks, lista, filtros, formulário, store do seletor | ✅ |
+| `src/features/plans/` — api, hooks, formulário de rotina, formatação da prescrição | ✅ |
+| Biblioteca, detalhe e CRUD de exercício personalizado (4 telas) | ✅ |
+| Seletor de exercícios com seleção múltipla (modal) | ✅ |
+| Rotinas: tab, nova, detalhe, edição, galeria de templates (5 telas) | ✅ |
+| Fichas: detalhe e editor de prescrição (2 telas) | ✅ |
+| `PlanCard`, `ExerciseThumb`, `ExerciseListItem`, `Chip`, `ReorderControls` | ✅ |
+| `estimateDayMinutes` — duração da ficha considerando bi-set | ✅ |
+
 ---
 
 ## Fase 0 — resultado
@@ -143,7 +156,7 @@ foram atendidos, com duas exceções registradas abaixo.
 
 | Item | Situação | Impacto |
 |---|---|---|
-| Build nativo iOS/Android local | ❌ Máquina sem Xcode e sem Android SDK | Verificação feita via web (mesmo bundle Metro). Resolver antes da Fase 4 |
+| ~~Build nativo iOS/Android local~~ | ✅ **Resolvido em 14/08/26** — emulador Android (Pixel 8, API 36) rodando o app via Expo Go | Falta só o iOS, que depende do Xcode |
 | Ambientes `dev` e `staging` no Supabase | ❌ Só existe o projeto atual | Migrations estão sendo aplicadas direto no projeto de produção |
 | Sentry | ⬜ Adiado para a Fase 7 | Nenhum — não há usuários ainda |
 | Husky + lint-staged + Commitlint | ⬜ Adiado | Baixo |
@@ -270,6 +283,55 @@ Migration `20260814001500_search_unaccent.sql`: wrapper `immutable_unaccent`, co
   (pendência herdada da Fase 0). A lista usa FlashList com `getItemType`, que é o que o plano pede.
 - Histórico e recordes no detalhe do exercício dependem de `workout_sessions` — Fase 5.
 
+---
+
+## Fase 3 — resultado
+
+Concluída em 14/08/2026. Todos os entregáveis do
+[roadmap](./08-roadmap-e-fases.md#fase-3--rotinas-e-fichas) foram atendidos.
+
+### Entregáveis
+
+| Item | Status |
+|---|---|
+| Tab "Treinos" com rotinas do usuário e acesso aos templates | ✅ |
+| Criar / editar / duplicar / arquivar rotina | ✅ (duplicar reusa a RPC `copy_plan_template`) |
+| CRUD de fichas com reordenação | ✅ — por botões, não por arrasto (ver decisão abaixo) |
+| Editor de ficha: adicionar exercícios, metas, reordenar, remover | ✅ |
+| Agrupamento em bi-set / tri-set | ✅ |
+| Galeria de templates com pré-visualização e `copy_plan_template()` | ✅ |
+| Definir rotina ativa | ✅ (`profiles.active_plan_id`) |
+| Estimativa automática de duração da ficha | ✅ `estimateDayMinutes` em `src/utils/calculations.ts` |
+
+### Validação executada
+
+| Verificação | Resultado |
+|---|---|
+| Listar templates com contagem de fichas (embed aninhado) | ✅ os 5 templates, 3 a 5 fichas cada |
+| `copy_plan_template` gera cópia independente | ✅ `source=user`, `is_template=false`, dono correto, 3 fichas e 20 exercícios |
+| Detalhe da ficha com exercício + grupo muscular + equipamento | ✅ embed de 3 níveis resolvendo |
+| Reordenar exercícios persiste | ✅ 1º movido para a 3ª posição, ordem confirmada no banco |
+| Agrupar em bi-set persiste e aparece na UI | ✅ "BI-SET A" com borda destacada |
+| Estimativa de duração | ✅ ~39 min para 7 exercícios / 23 séries — a UI bate com o cálculo independente |
+| Excluir rotina preserva histórico | ✅ por schema: `workout_sessions.plan_id` e `workout_day_id` são `on delete set null` |
+| **App rodando em runtime nativo** (emulador Android) | ✅ pela primeira vez — encerra a pendência da Fase 0 |
+| Módulos da Fase 3 no bundle Android | ✅ todos presentes |
+| `npm run typecheck` e `npm run lint` | ✅ limpos |
+
+### Ambiente nativo — pendência da Fase 0 resolvida
+
+Instalados em 14/08/26: `platform-tools`, `platforms;android-36`, a system image ARM64 do Android
+36 e o `cmdline-tools` dentro do SDK (5,6 GB no total). Java 17 e o cask
+`android-commandlinetools` já existiam no brew. AVD **GymApp_Pixel8** criado, emulador de pé e
+Expo Go instalado nele.
+
+Detalhe que custou tempo: o `avdmanager` do Homebrew procura as system images no diretório dele
+(`/opt/homebrew/share/android-commandlinetools`), não no `ANDROID_HOME`. A saída foi instalar o
+`cmdline-tools` **dentro** do SDK e usar aquele binário.
+
+**iOS continua sem simulador** — depende do Xcode, que exige download pela App Store e um
+`sudo xcode-select` que só o Leonardo pode rodar.
+
 ## Registro de decisões tomadas durante a execução
 
 > Registrar aqui toda decisão que desviar do plano, com o motivo. Se for arquitetural, criar também
@@ -297,6 +359,10 @@ Migration `20260814001500_search_unaccent.sql`: wrapper `immutable_unaccent`, co
 | 14/08/26 | 2 | Termo de busca normalizado no cliente (NFD) | Permite usar `.textSearch()` do supabase-js direto, sem criar uma RPC só para aplicar `unaccent` no termo |
 | 14/08/26 | 2 | Seleção do seletor volta por store zustand (`pickerStore`) | O Expo Router não devolve valor ao fechar um modal |
 | 14/08/26 | 2 | Detalhe do exercício sem histórico/recordes | US-3.2 pede, mas depende de `workout_sessions`, que só existe a partir da Fase 4. A tela avisa isso ao usuário |
+| 14/08/26 | 3 | Reordenação por botões (↑/↓), não por arrasto | `react-native-draggable-flatlist` não acompanha o Reanimated 4 deste SDK. Mais importante: arrastar é inalcançável no VoiceOver/TalkBack. Voltar a oferecer o arrasto por cima é polimento da Fase 7 |
+| 14/08/26 | 3 | Duplicar rotina reusa `copy_plan_template` | A RPC já copia fichas e prescrições e grava `owner_id = auth.uid()`; escrever um segundo caminho de cópia seria duplicar regra |
+| 14/08/26 | 3 | Botão "Iniciar treino" visível porém desabilitado na ficha | Deixa claro para onde a ficha leva sem fingir que a Fase 4 existe |
+| 14/08/26 | 3 | `cmdline-tools` instalado dentro do `ANDROID_HOME` | O `avdmanager` do brew procura as system images no diretório dele e não enxergava o SDK do usuário |
 
 ---
 

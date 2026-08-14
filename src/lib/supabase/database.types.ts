@@ -209,6 +209,7 @@ export type Database = {
           name_en: string | null
           name_pt: string
           primary_muscle_group_id: string
+          search_terms: string | null
           search_vector: unknown
           slug: string | null
           thumbnail_path: string | null
@@ -233,6 +234,7 @@ export type Database = {
           name_en?: string | null
           name_pt: string
           primary_muscle_group_id: string
+          search_terms?: string | null
           search_vector?: unknown
           slug?: string | null
           thumbnail_path?: string | null
@@ -257,6 +259,7 @@ export type Database = {
           name_en?: string | null
           name_pt?: string
           primary_muscle_group_id?: string
+          search_terms?: string | null
           search_vector?: unknown
           slug?: string | null
           thumbnail_path?: string | null
@@ -1174,6 +1177,7 @@ export type Database = {
           total_volume: number
         }[]
       }
+      immutable_unaccent: { Args: { "": string }; Returns: string }
       is_template_day: { Args: { p_day_id: string }; Returns: boolean }
       owns_day: { Args: { p_day_id: string }; Returns: boolean }
       owns_plan: { Args: { p_plan_id: string }; Returns: boolean }

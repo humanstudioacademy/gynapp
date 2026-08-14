@@ -4,7 +4,7 @@
 > Stack: **Expo (React Native + TypeScript)** + **Supabase (Postgres + Auth + Storage)**.
 > Escopo v1: **área do aluno**.
 
-**Status:** ✅ Fase 0 concluída · 🟡 Fase 1 codificada e verificada — faltam SMTP próprio e rate limits do Auth (ver [PROGRESS](./PROGRESS.md))
+**Status:** ✅ Fases 0 e 2 concluídas · 🟡 Fase 1 aguardando SMTP próprio e rate limits do Auth (ver [PROGRESS](./PROGRESS.md))
 
 ---
 
@@ -86,7 +86,8 @@ acompanha sua evolução por gráficos, recordes pessoais e medidas corporais.
 | Nome do app e bundle ID | 🟡 `ai.thehuman.gymapp` provisório — alterável até a 1ª submissão |
 | Fase 0 — Fundação | ✅ **Concluída** |
 | Fase 1 — Auth e perfil | 🟡 **Código pronto e verificado** — faltam SMTP e rate limits |
-| Fases 2–9 | ⬜ Não iniciadas |
+| Fase 2 — Biblioteca de exercícios | ✅ **Concluída** |
+| Fases 3–9 | ⬜ Não iniciadas |
 
 ---
 

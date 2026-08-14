@@ -5,7 +5,7 @@
 > Rastreador vivo do projeto. Atualizar ao fim de cada fase — o que entregou, o que ficou
 > pendente e o que mudou de rumo. O plano em si fica nos documentos numerados; **aqui fica a realidade.**
 
-**Última atualização:** 14/08/2026 · **Fase atual:** 🟡 Fase 1 — app pronto, faltam 2 itens de infraestrutura externa
+**Última atualização:** 14/08/2026 · **Fase atual:** ✅ Fase 2 concluída · 🟡 Fase 1 aguardando SMTP e rate limits
 
 ---
 
@@ -15,8 +15,8 @@
 Planejamento  ██████████████████████████████  100%  ✅ Concluído
 Fase 0        ██████████████████████████████  100%  ✅ Concluída
 Fase 1        ██████████████████████████░░░░   85%  🟡 Falta SMTP + rate limits
-Fase 2        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%  ⏳ Próxima
-Fase 3        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
+Fase 2        ██████████████████████████████  100%  ✅ Concluída
+Fase 3        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%  ⏳ Próxima
 Fase 4 ⭐     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
 Fase 5        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
 Fase 6        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
@@ -30,8 +30,8 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 | Planejamento | ✅ Concluída | 13/08/26 | 14/08/26 | 13 documentos + seeds do banco |
 | 0 — Fundação | ✅ **Concluída** | 14/08/26 | 14/08/26 | Expo SDK 57 + banco aplicado e validado |
 | 1 — Auth e perfil | 🟡 **Código pronto** | 14/08/26 | — | Faltam SMTP próprio e rate limits (dependem de conta externa) |
-| 2 — Exercícios | ⏳ Próxima | — | — | Catálogo já seedado; falta só a UI |
-| 3 — Rotinas | ⬜ | — | — | Templates já seedados |
+| 2 — Exercícios | ✅ **Concluída** | 14/08/26 | 14/08/26 | Biblioteca, busca, filtros, detalhe, personalizados e seletor |
+| 3 — Rotinas | ⏳ Próxima | — | — | Templates já seedados; seletor de exercícios já pronto |
 | 4 — Player ⭐ | ⬜ | — | — | **Fase crítica — não reduzir prazo** |
 | 5 — Progresso | ⬜ | — | — | |
 | 6 — Corpo e metas | ⬜ | — | — | Abrir contas Apple/Google nesta fase |
@@ -65,7 +65,7 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 
 | Artefato | Status | Onde |
 |---|---|---|
-| 14 migrations (schema, triggers, RPCs, RLS, storage) | ✅ **Aplicadas em produção** | `supabase/migrations/` |
+| 15 migrations (schema, triggers, RPCs, RLS, storage, busca) | ✅ **Aplicadas em produção** | `supabase/migrations/` |
 | Seed de grupos musculares e equipamentos | ✅ **Arquivo pronto** | `supabase/seed/01_catalog.sql` |
 | Seed de 138 exercícios + músculos secundários | ✅ **Arquivo pronto** | `supabase/seed/02_exercises.sql` |
 | Seed de 5 templates de treino | ✅ **Arquivo pronto** | `supabase/seed/03_templates.sql` |
@@ -204,6 +204,70 @@ serviço externo e continuam abertos — a fase não fecha sem eles.
 4. Verificar o upload de avatar e os deep links num **build nativo** (pendência herdada da Fase 0).
 5. Deploy da Edge Function: `supabase functions deploy delete-account`.
 
+---
+
+## Fase 2 — resultado
+
+Concluída em 14/08/2026. Todos os entregáveis do
+[roadmap](./08-roadmap-e-fases.md#fase-2--biblioteca-de-exercícios) foram atendidos.
+
+### Entregáveis
+
+| Item | Status |
+|---|---|
+| Biblioteca com FlashList e seções por grupo muscular | ✅ |
+| Busca full-text com debounce de 300ms | ✅ |
+| Filtros combináveis: grupo muscular, equipamento, favoritos, meus | ✅ |
+| Tela de detalhe do exercício | ✅ (histórico e recordes ficam para a Fase 5 — dependem de sessões) |
+| Criar / editar / excluir exercício personalizado | ✅ |
+| Favoritar com atualização otimista | ✅ |
+| Modal seletor com seleção múltipla | ✅ — a seleção volta pela store `pickerStore`, pronta para a Fase 3 |
+| `ExerciseThumb` com fallback colorido por grupo muscular | ✅ |
+
+### Correção de schema que a fase exigiu
+
+O `search_vector` original tinha **dois furos** que só apareceram ao usar de verdade:
+
+| Problema | Antes | Depois |
+|---|---|---|
+| Não ignorava acento — `to_tsvector('portuguese', …)` puro | "triceps" achava **2** | acha **10** |
+| Indexava só nome e descrição; quem busca por músculo ou equipamento não achava nada | "biceps" achava **0**, "halter" **0** | **10** e **31** |
+
+Migration `20260814001500_search_unaccent.sql`: wrapper `immutable_unaccent`, coluna
+`search_terms` mantida por trigger (junta nome, descrição, grupo muscular e equipamento) e
+`search_vector` gerado a partir dela. O termo digitado é normalizado no cliente antes do
+`.textSearch()`.
+
+### Validação executada
+
+| Verificação | Resultado |
+|---|---|
+| Busca "biceps" (sem acento) devolve os 10 exercícios de Bíceps | ✅ |
+| Busca "TRICEPS" (maiúscula, sem acento) devolve 10 | ✅ |
+| Busca "supino halter" aplica AND entre os termos | ✅ 2 resultados |
+| Latência da busca no banco | ✅ **0,118 ms** pelo índice GIN (critério: < 300ms) |
+| Filtros combinados (Peito + Halter) | ✅ 5 resultados corretos |
+| Aba Favoritos lista só o que foi favoritado | ✅ |
+| Favoritar atualiza na hora e persiste após recarregar | ✅ |
+| Criar exercício personalizado → detalhe com "só você vê" | ✅ |
+| **RLS: usuário B não enxerga o exercício de A** (nem por nome exato) | ✅ B recebe `[]`; vê só os 138 públicos |
+| Papel anônimo bloqueado na tabela `exercises` | ✅ |
+| Excluir a conta cascateia o exercício personalizado | ✅ catálogo volta a 138 |
+| `npm run typecheck` e `npm run lint` | ✅ limpos |
+
+### Bugs encontrados e corrigidos na verificação
+
+| Bug | Correção |
+|---|---|
+| Estrela de favorito era `Pressable` dentro do `Pressable` da linha — HTML inválido (`<button>` aninhado) e o leitor de tela não alcançava o botão de dentro | Estrela virou irmã da linha dentro de um `View` |
+| Seletor aberto por deep link travava: `router.back()` sem histórico | `dismiss()` cai na biblioteca quando não há para onde voltar |
+
+### Fora do escopo desta fase
+
+- **Scroll a 60fps com 150 itens** não foi medido: exige aparelho físico e build nativo
+  (pendência herdada da Fase 0). A lista usa FlashList com `getItemType`, que é o que o plano pede.
+- Histórico e recordes no detalhe do exercício dependem de `workout_sessions` — Fase 5.
+
 ## Registro de decisões tomadas durante a execução
 
 > Registrar aqui toda decisão que desviar do plano, com o motivo. Se for arquitetural, criar também
@@ -227,6 +291,10 @@ serviço externo e continuam abertos — a fase não fecha sem eles.
 | 14/08/26 | 1 | Exclusão de conta feita pelo cliente (Storage + RPC) | A Edge Function está escrita mas exige deploy com CLI autenticada. As policies de Storage já permitem o dono apagar a própria pasta, então o fluxo fecha sem ela |
 | 14/08/26 | 1 | i18n estruturado só com rótulos de enum na Fase 1 | Decisão D5 pede a estrutura desde já; a extração de todas as strings de tela é entregável da Fase 6 |
 | 14/08/26 | 1 | `expo-file-system` e `expo-crypto` promovidos a dependências diretas | Usados no upload de avatar (`arrayBuffer`) e no `client_id` das medições |
+| 14/08/26 | 2 | `search_terms` mantido por trigger, com grupo muscular e equipamento | Coluna gerada não enxerga outra tabela. Sem isso, "biceps", "peito" e "halter" não achavam nada — os nomes dos exercícios são "Rosca Direta", "Supino…" |
+| 14/08/26 | 2 | Termo de busca normalizado no cliente (NFD) | Permite usar `.textSearch()` do supabase-js direto, sem criar uma RPC só para aplicar `unaccent` no termo |
+| 14/08/26 | 2 | Seleção do seletor volta por store zustand (`pickerStore`) | O Expo Router não devolve valor ao fechar um modal |
+| 14/08/26 | 2 | Detalhe do exercício sem histórico/recordes | US-3.2 pede, mas depende de `workout_sessions`, que só existe a partir da Fase 4. A tela avisa isso ao usuário |
 
 ---
 
@@ -246,7 +314,7 @@ Preencher ao fechar cada fase — ajuda a calibrar as estimativas seguintes.
 |---|---|---|---|---|---|
 | 0 | 1 sem | — | — | 0 | — |
 | 1 | 1,5 sem | — | — | 11 + 4 tabs + 4 config | — |
-| 2 | 1 sem | — | — | 3 | — |
+| 2 | 1 sem | — | — | 4 (3 + seletor) | — |
 | 3 | 1,5 sem | — | — | 7 | — |
 | 4 | 2 sem | — | — | 5 | — |
 | 5 | 1,5 sem | — | — | 5 | — |

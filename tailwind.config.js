@@ -2,6 +2,9 @@
 module.exports = {
   content: ['./app/**/*.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
+  // 'class' (e não 'media') porque a preferência do usuário em user_settings.theme
+  // sobrescreve a do sistema — o ThemeProvider chama colorScheme.set().
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {

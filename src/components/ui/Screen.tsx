@@ -18,7 +18,8 @@ export function Screen({ children, scroll = true, padded = true }: Props) {
       <Container
         style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
         contentContainerStyle={scroll ? { paddingBottom: insets.bottom + 24 } : undefined}
-        className={padded ? 'px-4' : undefined}
+        keyboardShouldPersistTaps={scroll ? 'handled' : undefined}
+        className={`${padded ? 'px-4' : ''} ${scroll ? '' : 'flex-1'}`}
       >
         {children}
       </Container>

@@ -4,7 +4,7 @@
 > Stack: **Expo (React Native + TypeScript)** + **Supabase (Postgres + Auth + Storage)**.
 > Escopo v1: **área do aluno**.
 
-**Status:** ✅ Planejamento concluído · 🔴 Aguardando definição do [nome e bundle ID](./11-decisoes-e-pendencias.md#-o-único-item-que-falta-identidade-do-app) para iniciar a Fase 0
+**Status:** ✅ Fase 0 concluída · 🟡 Fase 1 codificada e verificada — faltam SMTP próprio e rate limits do Auth (ver [PROGRESS](./PROGRESS.md))
 
 ---
 
@@ -83,9 +83,10 @@ acompanha sua evolução por gráficos, recordes pessoais e medidas corporais.
 | Planejamento (13 documentos) | ✅ **Concluído** |
 | Seeds do banco (catálogo + templates) | ✅ **Escritos e versionados** |
 | Decisões de produto (D1–D8) e arquitetura (ADR-001 a 011) | ✅ **Fechadas** |
-| Nome do app e bundle ID | 🔴 **Depende de você** |
-| Fase 0 — Fundação | ⏳ Pronta para começar |
-| Fases 1–9 | ⬜ Não iniciadas |
+| Nome do app e bundle ID | 🟡 `ai.thehuman.gymapp` provisório — alterável até a 1ª submissão |
+| Fase 0 — Fundação | ✅ **Concluída** |
+| Fase 1 — Auth e perfil | 🟡 **Código pronto e verificado** — faltam SMTP e rate limits |
+| Fases 2–9 | ⬜ Não iniciadas |
 
 ---
 

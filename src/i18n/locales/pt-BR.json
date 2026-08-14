@@ -1,0 +1,52 @@
+{
+  "gender": {
+    "male": "Masculino",
+    "female": "Feminino",
+    "other": "Outro",
+    "undisclosed": "Prefiro não informar"
+  },
+  "goal": {
+    "lose_fat": "Perder gordura",
+    "gain_muscle": "Ganhar massa muscular",
+    "gain_strength": "Ganhar força",
+    "endurance": "Resistência",
+    "health": "Saúde e bem-estar",
+    "maintenance": "Manter a forma"
+  },
+  "goalDescription": {
+    "lose_fat": "Treino com mais volume e descanso curto",
+    "gain_muscle": "Hipertrofia: séries de 8 a 12 repetições",
+    "gain_strength": "Cargas altas e poucas repetições",
+    "endurance": "Séries longas e descanso curto",
+    "health": "Rotina equilibrada, sem pressa",
+    "maintenance": "Manter o que já conquistou"
+  },
+  "level": {
+    "beginner": "Iniciante",
+    "intermediate": "Intermediário",
+    "advanced": "Avançado"
+  },
+  "levelDescription": {
+    "beginner": "Estou começando agora ou voltando depois de um tempo",
+    "intermediate": "Treino com constância há mais de 6 meses",
+    "advanced": "Treino há anos e conheço bem minha periodização"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Automático"
+  },
+  "unitSystem": {
+    "metric": "Métrico (kg, cm)",
+    "imperial": "Imperial (lb, in)"
+  },
+  "weekday": {
+    "0": "Dom",
+    "1": "Seg",
+    "2": "Ter",
+    "3": "Qua",
+    "4": "Qui",
+    "5": "Sex",
+    "6": "Sáb"
+  }
+}

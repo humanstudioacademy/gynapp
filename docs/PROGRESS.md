@@ -5,7 +5,7 @@
 > Rastreador vivo do projeto. Atualizar ao fim de cada fase — o que entregou, o que ficou
 > pendente e o que mudou de rumo. O plano em si fica nos documentos numerados; **aqui fica a realidade.**
 
-**Última atualização:** 14/08/2026 · **Fase atual:** ✅ Fase 0 concluída — pronta para a Fase 1
+**Última atualização:** 14/08/2026 · **Fase atual:** 🟡 Fase 1 — app pronto, faltam 2 itens de infraestrutura externa
 
 ---
 
@@ -14,8 +14,8 @@
 ```
 Planejamento  ██████████████████████████████  100%  ✅ Concluído
 Fase 0        ██████████████████████████████  100%  ✅ Concluída
-Fase 1        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%  ⏳ Próxima
-Fase 2        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
+Fase 1        ██████████████████████████░░░░   85%  🟡 Falta SMTP + rate limits
+Fase 2        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%  ⏳ Próxima
 Fase 3        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
 Fase 4 ⭐     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
 Fase 5        ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    0%
@@ -29,8 +29,8 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 |---|---|---|---|---|
 | Planejamento | ✅ Concluída | 13/08/26 | 14/08/26 | 13 documentos + seeds do banco |
 | 0 — Fundação | ✅ **Concluída** | 14/08/26 | 14/08/26 | Expo SDK 57 + banco aplicado e validado |
-| 1 — Auth e perfil | ⏳ Próxima | — | — | |
-| 2 — Exercícios | ⬜ | — | — | Catálogo já seedado; falta só a UI |
+| 1 — Auth e perfil | 🟡 **Código pronto** | 14/08/26 | — | Faltam SMTP próprio e rate limits (dependem de conta externa) |
+| 2 — Exercícios | ⏳ Próxima | — | — | Catálogo já seedado; falta só a UI |
 | 3 — Rotinas | ⬜ | — | — | Templates já seedados |
 | 4 — Player ⭐ | ⬜ | — | — | **Fase crítica — não reduzir prazo** |
 | 5 — Progresso | ⬜ | — | — | |
@@ -86,7 +86,24 @@ Fase 9        ░░░░░░░░░░░░░░░░░░░░░░
 | Utilitários: `calculations`, `units`, `format` | ✅ |
 | `scripts/db.sh` (migrate · seed · psql · types) | ✅ |
 | Ícones e splash (placeholder gerado) | ✅ |
-| Tela de verificação da Fase 0 | ✅ (substituir na Fase 1) |
+| ~~Tela de verificação da Fase 0~~ | ✅ substituída pelas telas reais na Fase 1 |
+
+### Código da Fase 1 (auth, onboarding, perfil)
+
+| Artefato | Status |
+|---|---|
+| `AuthProvider` + `useAuthGuard` (guards do doc 04, seção 1.5) | ✅ |
+| 5 telas em `app/(auth)/` + 2 rotas de deep link em `app/auth/` | ✅ |
+| 4 telas em `app/onboarding/` com barra de progresso e "pular" | ✅ |
+| Tabs (`Início`, `Treinos`, `Progresso`, `Perfil`) | ✅ |
+| Perfil com edição e upload de avatar | ✅ |
+| Configurações: conta, notificações, aparência, unidades, privacidade | ✅ |
+| Exclusão de conta (Storage + `delete_my_account` + signOut) | ✅ |
+| Edge Function `supabase/functions/delete-account/` | ✅ escrita · ❌ não deployada |
+| Schemas Zod + React Hook Form em todos os formulários | ✅ |
+| Primitivos novos: `Input`, `Toast`, `EmptyState`, `ErrorState`, `Avatar`, `Switch`, `SegmentedControl`, `ProgressBar`, `Sheet`, `ConfirmDialog`, `ListRow`, `Header`, `OptionCard`, `BootSplash` | ✅ |
+| i18n estruturado (`src/i18n/`) com os rótulos dos enums | ✅ |
+| Tema claro/escuro dirigido por `user_settings.theme` | ✅ |
 
 ---
 
@@ -129,6 +146,64 @@ foram atendidos, com duas exceções registradas abaixo.
 | Sentry | ⬜ Adiado para a Fase 7 | Nenhum — não há usuários ainda |
 | Husky + lint-staged + Commitlint | ⬜ Adiado | Baixo |
 
+---
+
+## Fase 1 — resultado parcial
+
+Iniciada e codificada em 14/08/2026. **O app está funcional de ponta a ponta**, mas dois
+entregáveis do [roadmap](./08-roadmap-e-fases.md#fase-1--autenticação-e-perfil) dependem de
+serviço externo e continuam abertos — a fase não fecha sem eles.
+
+### Entregáveis
+
+| Item | Status |
+|---|---|
+| `AuthProvider` com `onAuthStateChange` e guards de rota | ✅ |
+| 7 telas do grupo AUTH | ✅ (5 em `(auth)/` + 2 rotas de deep link em `auth/`) |
+| 4 telas de onboarding | ✅ |
+| Validação com Zod + React Hook Form em todos os formulários | ✅ |
+| Deep links `gymapp://auth/*` | 🟡 implementados; **não testados** (falta SMTP e build nativo) |
+| **SMTP próprio (Resend/SendGrid) com templates em PT-BR** | ❌ **pendente — depende de conta externa** |
+| **Rate limits do Auth no Dashboard** | ❌ **pendente — depende de acesso ao Dashboard** |
+| Tela de perfil com edição e upload de avatar | 🟡 código pronto; upload não verificado (precisa de picker nativo) |
+| Fluxo de excluir conta + Edge Function `delete-account` | ✅ fluxo verificado · 🟡 função escrita, não deployada |
+| Tela de configurações com tema e unidades funcionando | ✅ |
+| Componentes `Button`, `Input`, `Card`, `Screen`, `Toast`, `EmptyState` | ✅ |
+
+### Validação executada (alvo web, mesmo bundle Metro)
+
+| Verificação | Resultado |
+|---|---|
+| Sem sessão, qualquer rota cai em `/welcome` | ✅ |
+| Zod barra o cadastro e mostra os 4 erros em PT-BR | ✅ |
+| Login → guard manda para o onboarding (perfil incompleto) | ✅ |
+| Onboarding 1/4: nome, máscara DD/MM/AAAA e sexo gravam em `profiles` | ✅ |
+| Onboarding 2/4: altura em `profiles`, peso vira linha em `body_measurements` | ✅ |
+| Onboarding 3/4: objetivo e nível gravam em `profiles` | ✅ |
+| Onboarding 4/4: `onboarding_completed = true` e guard leva às tabs | ✅ |
+| Recarregar a página mantém a sessão | ✅ |
+| Trocar tema para escuro aplica na hora e persiste em `user_settings.theme` | ✅ |
+| Excluir conta zera `auth.users`, `profiles`, `user_settings`, `body_measurements` | ✅ |
+| `npm run typecheck` e `npm run lint` | ✅ limpos |
+
+### Bugs encontrados e corrigidos na própria verificação
+
+| Bug | Correção |
+|---|---|
+| Onboarding gravava direto na API sem tocar no cache do React Query — o guard relia `onboarding_completed = false` e devolvia o usuário ao passo 1 | Passos viraram mutations (`src/features/onboarding/hooks.ts`) que escrevem a resposta do servidor no cache antes de navegar |
+| `authErrorMessage` casava qualquer mensagem com "invalid" e respondia "Esse link expirou" — inclusive para e-mail inválido | Mapa por `error_code` do GoTrue primeiro, texto só como fallback |
+| `colorScheme.set()` do NativeWind lançava na web (`darkMode` estava como `media`) | `darkMode: 'class'` no Tailwind + fallback que alterna a classe no `<html>` enquanto o CSS do Expo não chega |
+| `Alert.alert` é no-op no React Native Web: sair da conta e excluir conta não abriam confirmação nenhuma | Substituído pelo `ConfirmDialog` próprio, que funciona nas três plataformas |
+
+### O que falta para fechar a Fase 1
+
+1. **SMTP próprio** (Resend/SendGrid/SES) no Dashboard do Supabase, com templates em PT-BR.
+   Sem isso não dá para testar confirmação de e-mail nem recuperação de senha ponta a ponta.
+2. **Rate limits do Auth** conforme o [doc 04, seção 1.6](./04-seguranca-rls-e-auth.md).
+3. **Redirect URLs** `gymapp://auth/callback` e `gymapp://auth/reset-password` liberadas no Dashboard.
+4. Verificar o upload de avatar e os deep links num **build nativo** (pendência herdada da Fase 0).
+5. Deploy da Edge Function: `supabase functions deploy delete-account`.
+
 ## Registro de decisões tomadas durante a execução
 
 > Registrar aqui toda decisão que desviar do plano, com o motivo. Se for arquitetural, criar também
@@ -142,6 +217,16 @@ foram atendidos, com duas exceções registradas abaixo.
 | 14/08/26 | 0 | Verificação da Fase 0 feita no alvo web | Sem Xcode/Android SDK na máquina; é o mesmo bundle Metro + react-native-web |
 | 14/08/26 | 0 | `start_free_session()` adicionada ao plano original | US-5.1 prevê treino livre sem ficha; faltava a RPC |
 | 14/08/26 | 0 | PR de `best_duration` incluído no trigger | Exercícios com `tracking_type = duration` (prancha) não gerariam recorde |
+| 14/08/26 | 1 | Projeto movido para `~/Materiais/Aplicativo Mobile` | Estava na Mesa sincronizada pelo iCloud, que moveu a pasta duas vezes durante a sessão. Projeto Node/Expo não deve viver em pasta sincronizada |
+| 14/08/26 | 1 | Deep links em `app/auth/*` (pasta real), não em `(auth)/` | Grupo entre parênteses não entra na URL: `gymapp://auth/reset-password` não resolveria para `(auth)/reset-password` |
+| 14/08/26 | 1 | Onboarding em `app/onboarding/*`, não em `(onboarding)/` | `(onboarding)/profile` e `(tabs)/profile` colidiriam na mesma URL `/profile` |
+| 14/08/26 | 1 | Sem `app/index.tsx`; `/` é a index das tabs | Um `index.tsx` na raiz criaria rota ambígua com `(tabs)/index`. O splash virou overlay do layout raiz enquanto sessão e perfil carregam |
+| 14/08/26 | 1 | `flowType: 'pkce'` no cliente Supabase | Os links de e-mail chegam por deep link com `?code=`, trocado por sessão em `app/auth/*` (doc 04, seção 1.1) |
+| 14/08/26 | 1 | `darkMode: 'class'` no Tailwind | A preferência do usuário sobrescreve a do sistema; com `media` o NativeWind não deixa trocar o tema por código |
+| 14/08/26 | 1 | `ConfirmDialog` próprio no lugar de `Alert.alert` | `Alert` é no-op no React Native Web — a confirmação destrutiva simplesmente não abria fora do celular |
+| 14/08/26 | 1 | Exclusão de conta feita pelo cliente (Storage + RPC) | A Edge Function está escrita mas exige deploy com CLI autenticada. As policies de Storage já permitem o dono apagar a própria pasta, então o fluxo fecha sem ela |
+| 14/08/26 | 1 | i18n estruturado só com rótulos de enum na Fase 1 | Decisão D5 pede a estrutura desde já; a extração de todas as strings de tela é entregável da Fase 6 |
+| 14/08/26 | 1 | `expo-file-system` e `expo-crypto` promovidos a dependências diretas | Usados no upload de avatar (`arrayBuffer`) e no `client_id` das medições |
 
 ---
 
@@ -160,7 +245,7 @@ Preencher ao fechar cada fase — ajuda a calibrar as estimativas seguintes.
 | Fase | Estimado | Real | Desvio | Telas | Testes |
 |---|---|---|---|---|---|
 | 0 | 1 sem | — | — | 0 | — |
-| 1 | 1,5 sem | — | — | 11 | — |
+| 1 | 1,5 sem | — | — | 11 + 4 tabs + 4 config | — |
 | 2 | 1 sem | — | — | 3 | — |
 | 3 | 1,5 sem | — | — | 7 | — |
 | 4 | 2 sem | — | — | 5 | — |

@@ -31,6 +31,9 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false, // obrigatório em React Native
+    // PKCE: os links de e-mail chegam por deep link com `?code=`, trocado
+    // por sessão em app/auth/* (docs/04, seção 1.1).
+    flowType: 'pkce',
   },
 });
 
